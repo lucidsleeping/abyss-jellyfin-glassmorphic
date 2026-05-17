@@ -1,0 +1,95 @@
+/* Abyss Touch — touch-first playback and mobile polish */
+
+/* Seek feedback overlay (double-tap left / right edges) */
+#abyss-seek-feedback {
+    position: fixed;
+    top: 50%;
+    z-index: 12000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15em;
+    padding: 1.1em 1.35em;
+    border-radius: 18px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-50%) scale(0.92);
+    transition:
+        opacity 0.22s var(--abyss-ease, ease),
+        transform 0.22s var(--abyss-ease, ease);
+    background: rgba(var(--abyss-glass-tint, 42, 42, 42), 0.72);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    color: rgb(var(--abyss-accent, 245, 245, 247));
+    font-family: "Google Sans", system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+}
+
+#abyss-seek-feedback.is-visible {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+}
+
+#abyss-seek-feedback.is-rewind {
+    left: 12%;
+}
+
+#abyss-seek-feedback.is-forward {
+    right: 12%;
+}
+
+.abyss-seek-feedback__chevrons {
+    font-size: 2rem;
+    line-height: 1;
+    letter-spacing: -0.12em;
+    opacity: 0.95;
+}
+
+.abyss-seek-feedback__label {
+    font-size: 0.95rem;
+    opacity: 0.88;
+}
+
+@media (pointer: coarse), (max-width: 50em) {
+    /* Larger tap targets on player controls */
+    #videoOsdPage .videoOsdBottom .paper-icon-button-light {
+        min-width: 2.75rem;
+        min-height: 2.75rem;
+    }
+
+    #videoOsdPage .osdPositionSlider {
+        min-height: 2.25rem;
+    }
+
+    .videoOsdBottom {
+        padding-bottom: max(12px, env(safe-area-inset-bottom)) !important;
+        margin-bottom: max(12px, env(safe-area-inset-bottom)) !important;
+    }
+
+    .skinHeader.osdHeader {
+        padding-top: env(safe-area-inset-top);
+    }
+
+    /* Reduce accidental double-tap zoom on player */
+    #videoOsdPage {
+        touch-action: manipulation;
+    }
+
+    /* Now playing bar: easier thumb targets */
+    .layout-mobile .nowPlayingBar .paper-icon-button-light {
+        min-width: 2.5rem;
+        min-height: 2.5rem;
+    }
+
+    .layout-mobile .nowPlayingBar {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    /* Cards: slightly larger overlay play on touch */
+    .layout-mobile .cardOverlayButton-br {
+        transform: scale(1.08);
+    }
+}

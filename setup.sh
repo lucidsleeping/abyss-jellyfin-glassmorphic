@@ -6,7 +6,7 @@ set -euo pipefail
 # https://github.com/AumGupta/abyss-jellyfin
 # ==============================================================================
 
-REPO="AumGupta/abyss-jellyfin"
+REPO="lucidsleeping/abyss-jellyfin-touch-ui"
 BRANCH="main"
 RAW="https://raw.githubusercontent.com/${REPO}/${BRANCH}"
 REPO_URL="https://github.com/${REPO}"
@@ -15,6 +15,10 @@ SPOTLIGHT_FILES=(
     "scripts/spotlight/spotlight.html"
     "scripts/spotlight/spotlight.css"
     "scripts/spotlight/home-html.chunk.js"
+)
+
+TOUCH_FILES=(
+    "scripts/touch/abyss-touch.js"
 )
 
 # Detect OS once at startup
@@ -147,6 +151,104 @@ sync_spotlight_files() {
         local dest="${abyss_dir}/$(basename "$file")"
         download_file "$file" "$dest"
     done
+    echo ""
+}
+
+sync_touch_files() {
+    local abyss_dir="$1"
+    step "Downloading touch UI files..."
+    echo ""
+    for file in "${TOUCH_FILES[@]}"; do
+        local dest="${abyss_dir}/$(basename "$file")"
+        download_file "$file" "$dest"
+    done
+    echo ""
+}
+
+install_touch_ui() {
+    local web_dir="$1"
+    local abyss_dir="$2"
+    local ui_dir="${web_dir}/ui"
+    local src="${abyss_dir}/abyss-touch.js"
+    local dest="${ui_dir}/abyss-touch.js"
+    local index="${web_dir}/index.html"
+
+    step "Installing touch UI..."
+    echo ""
+
+    [[ ! -f "$src" ]] && exit_error "Missing abyss-touch.js - try running setup again."
+
+    mkdir -p "$ui_dir"
+    cp -f "$src" "$dest"
+    ok "Copied: abyss-touch.js"
+
+    if [[ ! -f "$index" ]]; then
+        warn "index.html not found; touch script not linked."
+        info "Add manually to index.html before </body>:"
+        info '<script src="ui/abyss-touch.js" defer></script>'
+        echo ""
+        return
+    fi
+
+    if grep -q 'abyss-touch.js' "$index"; then
+        skip "Touch script already linked in index.html."
+    else
+        [[ ! -f "${index}.bak.abyss" ]] && cp -f "$index" "${index}.bak.abyss" && ok "Backed up index.html."
+        python3 -c "
+import sys
+path = sys.argv[1]
+tag = '<script src=\"ui/abyss-touch.js\" defer></script>'
+with open(path, encoding='utf-8') as f:
+    html = f.read()
+if tag not in html:
+    if '</body>' in html:
+        html = html.replace('</body>', tag + chr(10) + '</body>', 1)
+    else:
+        html = html + chr(10) + tag + chr(10)
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write(html)
+" "$index"
+        ok "Linked touch script in index.html."
+    fi
+    echo ""
+}
+
+uninstall_touch_ui() {
+    local web_dir="$1"
+    local ui_dir="${web_dir}/ui"
+    local index="${web_dir}/index.html"
+
+    step "Removing touch UI..."
+    echo ""
+
+    local touch_js="${ui_dir}/abyss-touch.js"
+    if [[ -f "$touch_js" ]]; then
+        rm -f "$touch_js"
+        ok "Removed: abyss-touch.js"
+    else
+        skip "Not found: abyss-touch.js"
+    fi
+
+    if [[ -f "$index" ]] && grep -q 'abyss-touch.js' "$index"; then
+        if [[ -f "${index}.bak.abyss" ]]; then
+            cp -f "${index}.bak.abyss" "$index"
+            rm -f "${index}.bak.abyss"
+            ok "Restored index.html from backup."
+        else
+            python3 -c "
+import re, sys
+path = sys.argv[1]
+with open(path, encoding='utf-8') as f:
+    html = f.read()
+html = re.sub(r'\\s*<script[^>]*abyss-touch\\.js[^>]*></script>\\s*', chr(10), html, flags=re.I)
+with open(path, 'w', encoding='utf-8') as f:
+    f.write(html)
+" "$index"
+            ok "Removed touch script tag from index.html."
+        fi
+    else
+        skip "Touch script not linked in index.html."
+    fi
     echo ""
 }
 
@@ -293,8 +395,9 @@ install_abyss() {
     fi
     echo ""
 
-    # Download spotlight files
+    # Download spotlight and touch files
     sync_spotlight_files "$abyss_dir"
+    sync_touch_files "$abyss_dir"
 
     # Apply CSS
     step "Applying Abyss CSS..."
@@ -426,6 +529,8 @@ print(json.dumps(d))
     ok "Chunk patched."
     echo ""
 
+    install_touch_ui "$web_dir" "$abyss_dir"
+
     # Restart
     restart_jellyfin "$server_url" "$api_header"
 
@@ -527,6 +632,8 @@ print(json.dumps(d))
         info "You may need to reinstall Jellyfin web."
     fi
     echo ""
+
+    uninstall_touch_ui "$web_dir"
 
     # Remove spotlight files
     step "Removing spotlight files..."

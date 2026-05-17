@@ -70,3 +70,12 @@ document.addEventListener("DOMContentLoaded", () => {
     iframe.style.display = homeTab.classList.contains("is-active") ? "block" : "none";
   }).observe(homeTab, { attributes: true, attributeFilter: ["class"] });
 });
+
+(function loadAbyssTouch() {
+  if (document.getElementById("abyss-touch-loader") || window.AbyssTouch) return;
+  const script = document.createElement("script");
+  script.id = "abyss-touch-loader";
+  script.src = "/web/ui/abyss-touch.js";
+  script.defer = true;
+  document.head.appendChild(script);
+})();

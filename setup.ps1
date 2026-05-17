@@ -2,7 +2,7 @@ $ErrorActionPreference = "Stop"
 
 # Constants 
 
-$REPO     = "AumGupta/abyss-jellyfin"
+$REPO     = "lucidsleeping/abyss-jellyfin-touch-ui"
 $BRANCH   = "main"
 $RAW      = "https://raw.githubusercontent.com/$REPO/$BRANCH"
 $REPO_URL = "https://github.com/$REPO"
@@ -11,6 +11,10 @@ $SPOTLIGHT_FILES = @(
     "scripts/spotlight/spotlight.html",
     "scripts/spotlight/spotlight.css",
     "scripts/spotlight/home-html.chunk.js"
+)
+
+$TOUCH_FILES = @(
+    "scripts/touch/abyss-touch.js"
 )
 
 # Helpers 
@@ -98,6 +102,97 @@ function Sync-SpotlightFiles {
     foreach ($file in $SPOTLIGHT_FILES) {
         $destPath = Join-Path $abyssDir (Split-Path $file -Leaf)
         Get-AbyssFile $file $destPath
+    }
+    Write-Host ""
+}
+
+function Sync-TouchFiles {
+    param($abyssDir)
+    Write-Step "Downloading touch UI files..."
+    Write-Host ""
+    foreach ($file in $TOUCH_FILES) {
+        $destPath = Join-Path $abyssDir (Split-Path $file -Leaf)
+        Get-AbyssFile $file $destPath
+    }
+    Write-Host ""
+}
+
+function Install-TouchUi {
+    param($webDir, $abyssDir)
+
+    Write-Step "Installing touch UI..."
+    Write-Host ""
+
+    $uiDir   = Join-Path $webDir "ui"
+    $src     = Join-Path $abyssDir "abyss-touch.js"
+    $dest    = Join-Path $uiDir "abyss-touch.js"
+    $index   = Join-Path $webDir "index.html"
+    $tag     = '<script src="ui/abyss-touch.js" defer></script>'
+
+    if (-not (Test-Path $src)) { Exit-WithError "Missing abyss-touch.js - try running setup again to re-download." }
+
+    if (-not (Test-Path $uiDir)) { New-Item -ItemType Directory -Path $uiDir -Force | Out-Null }
+    Copy-Item $src $dest -Force
+    Write-Ok "Copied: abyss-touch.js"
+
+    if (-not (Test-Path $index)) {
+        Write-Warn "index.html not found; touch script not linked."
+        Write-Info "Add manually before </body>: $tag"
+        Write-Host ""
+        return
+    }
+
+    $html = Get-Content $index -Raw -Encoding UTF8
+    if ($html -match 'abyss-touch\.js') {
+        Write-Skip "Touch script already linked in index.html."
+    } else {
+        $bak = "$index.bak.abyss"
+        if (-not (Test-Path $bak)) {
+            Copy-Item $index $bak -Force
+            Write-Ok "Backed up index.html."
+        }
+        if ($html -match '</body>') {
+            $html = $html -replace '</body>', "$tag`n</body>", 1
+        } else {
+            $html = "$html`n$tag`n"
+        }
+        Set-Content $index $html -Encoding UTF8 -NoNewline
+        Write-Ok "Linked touch script in index.html."
+    }
+    Write-Host ""
+}
+
+function Uninstall-TouchUi {
+    param($webDir)
+
+    Write-Step "Removing touch UI..."
+    Write-Host ""
+
+    $uiDir   = Join-Path $webDir "ui"
+    $touchJs = Join-Path $uiDir "abyss-touch.js"
+    $index   = Join-Path $webDir "index.html"
+    $bak     = "$index.bak.abyss"
+
+    if (Test-Path $touchJs) {
+        Remove-Item $touchJs -Force
+        Write-Ok "Removed: abyss-touch.js"
+    } else {
+        Write-Skip "Not found: abyss-touch.js"
+    }
+
+    if ((Test-Path $index) -and (Get-Content $index -Raw) -match 'abyss-touch\.js') {
+        if (Test-Path $bak) {
+            Copy-Item $bak $index -Force
+            Remove-Item $bak -Force
+            Write-Ok "Restored index.html from backup."
+        } else {
+            $html = Get-Content $index -Raw -Encoding UTF8
+            $html = [regex]::Replace($html, '\s*<script[^>]*abyss-touch\.js[^>]*></script>\s*', "`n", 'IgnoreCase')
+            Set-Content $index $html -Encoding UTF8 -NoNewline
+            Write-Ok "Removed touch script tag from index.html."
+        }
+    } else {
+        Write-Skip "Touch script not linked in index.html."
     }
     Write-Host ""
 }
@@ -195,8 +290,9 @@ function Install-Abyss {
     }
     Write-Host ""
 
-    # Download spotlight files (always fresh)
+    # Download spotlight and touch files (always fresh)
     Sync-SpotlightFiles $abyssDir
+    Sync-TouchFiles $abyssDir
 
     # Apply Abyss CSS
     Write-Step "Applying Abyss CSS..."
@@ -289,6 +385,8 @@ function Install-Abyss {
     Copy-Item $chunkSrc $chunkFile -Force
     Write-Ok "Chunk patched."
     Write-Host ""
+
+    Install-TouchUi $webDir $abyssDir
 
     # Restart
     Write-Step "Restarting Jellyfin..."
@@ -393,6 +491,8 @@ function Uninstall-Abyss {
         Write-Info "You may need to reinstall Jellyfin."
     }
     Write-Host ""
+
+    Uninstall-TouchUi $webDir
 
     # Remove spotlight files
     Write-Step "Removing spotlight files..."
