@@ -77,5 +77,8 @@ document.addEventListener("DOMContentLoaded", () => {
   script.id = "abyss-touch-loader";
   script.src = "/web/ui/abyss-touch.js";
   script.defer = true;
+  script.onerror = function () {
+    script.remove();
+  };
   document.head.appendChild(script);
 })();

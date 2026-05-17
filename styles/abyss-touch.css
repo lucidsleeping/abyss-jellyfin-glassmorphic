@@ -73,8 +73,8 @@
         padding-top: env(safe-area-inset-top);
     }
 
-    /* Reduce accidental double-tap zoom on player */
-    #videoOsdPage {
+    /* Reduce accidental double-tap zoom while touch seek is active */
+    .abyss-touch-enabled #videoOsdPage {
         touch-action: manipulation;
     }
 

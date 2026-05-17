@@ -187,7 +187,7 @@ function Uninstall-TouchUi {
             Write-Ok "Restored index.html from backup."
         } else {
             $html = Get-Content $index -Raw -Encoding UTF8
-            $html = [regex]::Replace($html, '\s*<script[^>]*abyss-touch\.js[^>]*></script>\s*', "`n", 'IgnoreCase')
+            $html = [regex]::Replace($html, '\s*<script[^>]*abyss-touch\.js[^>]*>\s*</script>\s*', "`n", 'IgnoreCase')
             Set-Content $index $html -Encoding UTF8 -NoNewline
             Write-Ok "Removed touch script tag from index.html."
         }

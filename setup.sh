@@ -235,15 +235,15 @@ uninstall_touch_ui() {
             rm -f "${index}.bak.abyss"
             ok "Restored index.html from backup."
         else
-            python3 -c "
+            python3 -c '
 import re, sys
 path = sys.argv[1]
-with open(path, encoding='utf-8') as f:
+with open(path, encoding="utf-8") as f:
     html = f.read()
-html = re.sub(r'\\s*<script[^>]*abyss-touch\\.js[^>]*></script>\\s*', chr(10), html, flags=re.I)
-with open(path, 'w', encoding='utf-8') as f:
+html = re.sub(r"\s*<script[^>]*abyss-touch\.js[^>]*>\s*</script>\s*", "\n", html, flags=re.I)
+with open(path, "w", encoding="utf-8") as f:
     f.write(html)
-" "$index"
+' "$index"
             ok "Removed touch script tag from index.html."
         fi
     else
