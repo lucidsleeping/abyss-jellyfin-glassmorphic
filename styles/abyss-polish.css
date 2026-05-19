@@ -112,32 +112,22 @@
     letter-spacing: 0.01em;
 }
 
-/* ── 4. Header blur: soft feathered edge (no hard cutoff) ── */
+/* ── 4. Top header: no blur bar (hero/backdrop shows through) ── */
 
 .skinHeader-withBackground::before {
-    height: 12em !important;
-    background: linear-gradient(
-        180deg,
-        rgba(var(--abyss-glass-tint), 0.78) 0%,
-        rgba(var(--abyss-glass-tint), 0.42) 42%,
-        rgba(var(--abyss-glass-tint), 0.14) 72%,
-        transparent 100%
-    ) !important;
-    -webkit-backdrop-filter: blur(36px) saturate(185%) brightness(1.1) contrast(1.03) !important;
-    backdrop-filter: blur(36px) saturate(185%) brightness(1.1) contrast(1.03) !important;
-    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 48%, transparent 100%);
-    mask-image: linear-gradient(180deg, #000 0%, #000 48%, transparent 100%);
+    display: none !important;
+    content: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: none !important;
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
 }
 
-@supports (backdrop-filter: blur(1px)) {
-    .skinHeader-withBackground::before {
-        background: linear-gradient(
-            180deg,
-            rgba(var(--abyss-glass-tint), 0.65) 0%,
-            rgba(var(--abyss-glass-tint), 0.28) 50%,
-            transparent 100%
-        ) !important;
-    }
+.skinHeader-withBackground:not(.osdHeader) {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: transparent !important;
 }
 
 /* ── 5. Video player: restore back button ── */

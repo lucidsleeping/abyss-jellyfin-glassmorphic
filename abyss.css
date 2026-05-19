@@ -340,15 +340,9 @@ input[type="radio"]:checked {
     background-color: transparent;
 }
 
-/* skinHeader-withBackground blur — styles/abyss-polish.css */
+/* skinHeader-withBackground blur bar — disabled in styles/abyss-polish.css */
 .skinHeader-withBackground::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    pointer-events: none;
-    z-index: 1;
+    display: none;
 }
 
 /* headerLeft / headerRight padding — styles/abyss-layout.css */
