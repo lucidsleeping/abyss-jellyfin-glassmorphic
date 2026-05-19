@@ -8,11 +8,7 @@
     overflow-x: hidden !important;
     overflow-y: auto !important;
     max-height: min(85vh, 42em);
-    background-color: rgba(var(--abyss-glass-tint), var(--abyss-glass-fill-elevated, 0.48)) !important;
-    border: 0.5px solid rgba(var(--abyss-glass-highlight), 0.2) !important;
-    box-shadow: 0 14px 42px rgba(0, 0, 0, 0.38) !important;
-    -webkit-backdrop-filter: blur(28px) saturate(175%);
-    backdrop-filter: blur(28px) saturate(175%);
+    /* Thicker Regular glass for menus — abyss-liquid-glass.css */
 }
 
 .actionSheetContent::before,
