@@ -1929,6 +1929,7 @@ div[data-role="controlgroup"] a[data-role="button"]:last-child {
 @media all and (max-width: 50em) {
     .searchSuggestionsList {
         min-width: calc(100vw - 80px);
+        padding-left: 44px;
     }
 }
 
