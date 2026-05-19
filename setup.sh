@@ -6,8 +6,9 @@ set -euo pipefail
 # https://github.com/AumGupta/abyss-jellyfin
 # ==============================================================================
 
-REPO="lucidsleeping/abyss-jellyfin-touch-ui"
-BRANCH="main"
+# Fallback download source (only used when a file is missing from the local repo)
+REPO="${ABYSS_REPO:-lucidsleeping/abyss-jellyfin-touch-ui}"
+BRANCH="${ABYSS_BRANCH:-main}"
 RAW="https://raw.githubusercontent.com/${REPO}/${BRANCH}"
 REPO_URL="https://github.com/${REPO}"
 
@@ -19,6 +20,26 @@ SPOTLIGHT_FILES=(
 
 TOUCH_FILES=(
     "scripts/touch/abyss-touch.js"
+)
+
+THEME_FILES=(
+    "abyss.css"
+    "styles/abyss-liquid-glass.css"
+    "styles/abyss-player.css"
+    "styles/abyss-touch.css"
+    "styles/abyss-je.css"
+    "styles/abyss-mbe.css"
+)
+
+# Directory containing this setup script (local repo checkout — primary install source)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Required for a complete install (liquid glass + player OSD)
+REQUIRED_THEME_FILES=(
+    "abyss.css"
+    "styles/abyss-liquid-glass.css"
+    "styles/abyss-player.css"
+    "styles/abyss-touch.css"
 )
 
 # Detect OS once at startup
@@ -71,7 +92,11 @@ show_header() {
     echo ""
     echo -e "${cyan}  ================================================${reset}"
     echo -e "  Abyss Theme - $1"
-    echo -e "${gray}  ${REPO_URL}${reset}"
+    if [[ -f "${SCRIPT_DIR}/abyss.css" ]]; then
+        info "Install source: ${SCRIPT_DIR}"
+    else
+        info "Fallback downloads: ${REPO_URL}"
+    fi
     echo -e "${cyan}  ================================================${reset}"
     echo ""
 }
@@ -81,6 +106,11 @@ show_header() {
 # ------------------------------------------------------------------------------
 
 get_jellyfin_web_dir() {
+    if [[ -n "${JELLYFIN_WEB_DIR:-}" && -d "${JELLYFIN_WEB_DIR}" ]]; then
+        echo "${JELLYFIN_WEB_DIR}"
+        return
+    fi
+
     local candidates=(
         # Linux; native packages
         "/usr/share/jellyfin/web"
@@ -97,8 +127,8 @@ get_jellyfin_web_dir() {
         "$HOME/Applications/Jellyfin.app/Contents/Resources/jellyfin-web"
         "/Applications/Jellyfin.app/Contents/Resources/web"
         "$HOME/Applications/Jellyfin.app/Contents/Resources/web"
-        # Docker; jellyfin/jellfin (official image) 
-        "/jellyfin/jellyfin-web" # Note: this is the path inside the container, not on the host
+        # Docker (official image — path inside the container)
+        "/jellyfin/jellyfin-web"
     )
 
     for p in "${candidates[@]}"; do
@@ -124,8 +154,16 @@ get_jellyfin_web_dir() {
 }
 
 # ------------------------------------------------------------------------------
-# Download files
+# Install files into jellyfin-web (local repo first, GitHub fallback)
 # ------------------------------------------------------------------------------
+
+ensure_writable_dir() {
+    local dir="$1"
+    mkdir -p "$dir"
+    if [[ ! -w "$dir" ]]; then
+        exit_error "Cannot write to ${dir}. Re-run with sudo or fix permissions."
+    fi
+}
 
 download_file() {
     local repo_path="$1"
@@ -137,31 +175,161 @@ download_file() {
 
     local url="${RAW}/${repo_path}"
     if curl -fsSL "$url" -o "$dest_path"; then
-        ok "Downloaded: $(basename "$dest_path")"
+        ok "Downloaded: ${repo_path}"
     else
-        exit_error "Failed to download ${repo_path} - check your internet connection."
+        exit_error "Failed to download ${repo_path} from ${REPO}@${BRANCH}."
     fi
 }
 
-sync_spotlight_files() {
+# Copy from SCRIPT_DIR when present; otherwise download from GitHub
+install_repo_file() {
+    local repo_rel="$1"
+    local dest_path="$2"
+    local src="${SCRIPT_DIR}/${repo_rel}"
+
+    mkdir -p "$(dirname "$dest_path")"
+
+    if [[ -f "$src" ]]; then
+        cp -f "$src" "$dest_path"
+        ok "Copied: ${repo_rel}"
+        return 0
+    fi
+
+    warn "Missing locally: ${repo_rel}"
+    download_file "$repo_rel" "$dest_path"
+}
+
+sync_all_abyss_assets() {
     local abyss_dir="$1"
-    step "Downloading latest spotlight files..."
+
+    step "Copying Abyss theme and add-ons into jellyfin-web..."
     echo ""
+    info "Repository: ${SCRIPT_DIR}"
+    info "Destination:  ${abyss_dir}/"
+    echo ""
+
+    ensure_writable_dir "${abyss_dir}"
+    ensure_writable_dir "${abyss_dir}/styles"
+
+    # Theme CSS (abyss.css + all styles/*.css including liquid-glass + player)
+    install_repo_file "abyss.css" "${abyss_dir}/abyss.css"
+
+    if [[ -d "${SCRIPT_DIR}/styles" ]]; then
+        local css
+        for css in "${SCRIPT_DIR}"/styles/*.css; do
+            [[ -f "$css" ]] || continue
+            install_repo_file "styles/$(basename "$css")" "${abyss_dir}/styles/$(basename "$css")"
+        done
+    else
+        local file
+        for file in "${THEME_FILES[@]}"; do
+            [[ "$file" == "abyss.css" ]] && continue
+            install_repo_file "$file" "${abyss_dir}/${file}"
+        done
+    fi
+
+    # Spotlight staging files (copied to ui/ later)
+    local file
     for file in "${SPOTLIGHT_FILES[@]}"; do
-        local dest="${abyss_dir}/$(basename "$file")"
-        download_file "$file" "$dest"
+        install_repo_file "$file" "${abyss_dir}/$(basename "$file")"
     done
+
+    # Touch script staging (copied to ui/ later)
+    for file in "${TOUCH_FILES[@]}"; do
+        install_repo_file "$file" "${abyss_dir}/$(basename "$file")"
+    done
+
     echo ""
 }
 
-sync_touch_files() {
+verify_theme_install() {
     local abyss_dir="$1"
-    step "Downloading touch UI files..."
+    local missing=()
+    local f rel
+
+    step "Verifying theme bundle..."
     echo ""
-    for file in "${TOUCH_FILES[@]}"; do
-        local dest="${abyss_dir}/$(basename "$file")"
-        download_file "$file" "$dest"
+
+    for rel in "${REQUIRED_THEME_FILES[@]}"; do
+        f="${abyss_dir}/${rel}"
+        if [[ ! -f "$f" ]]; then
+            missing+=("$rel")
+        else
+            ok "Present: ${rel}"
+        fi
     done
+
+    if [[ ${#missing[@]} -gt 0 ]]; then
+        echo ""
+        fail "Incomplete theme install. Missing:"
+        for rel in "${missing[@]}"; do
+            info "  - ${rel}"
+        done
+        exit_error "Run setup from the full repo folder containing abyss.css and styles/."
+    fi
+
+    if grep -q 'abyss-player.css' "${abyss_dir}/abyss.css" 2>/dev/null; then
+        ok "abyss.css imports player OSD styles."
+    else
+        warn "abyss.css may be outdated (no abyss-player.css import)."
+    fi
+
+    if grep -q 'abyss-liquid-glass.css' "${abyss_dir}/abyss.css" 2>/dev/null; then
+        ok "abyss.css imports liquid glass material."
+    fi
+
+    echo ""
+}
+
+# Served from jellyfin-web/abyss/ (not jsDelivr)
+abyss_css_import() {
+    local version
+    version="$(date +%s)"
+    printf "@import url('/abyss/abyss.css?v=%s');\n/* Abyss — served from jellyfin-web/abyss/ */" "$version"
+}
+
+apply_custom_css() {
+    local server_url="$1"
+    local api_header="$2"
+    local css
+    css="$(abyss_css_import)"
+
+    step "Applying Custom CSS (Dashboard > General)..."
+    echo ""
+
+    local branding
+    branding=$(curl -fsSL \
+        -X GET "${server_url}/Branding/Configuration" \
+        -H "X-Emby-Authorization: ${api_header}" 2>/dev/null) || true
+
+    if [[ -z "$branding" ]]; then
+        fail "Could not fetch branding config."
+        info "Add manually in Dashboard > General > Custom CSS:"
+        info "$(printf '%b' "$css")"
+        echo ""
+        return 1
+    fi
+
+    local updated_branding
+    updated_branding=$(echo "$branding" | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+d['CustomCss'] = sys.argv[1]
+print(json.dumps(d))
+" "$(printf '%b' "$css")")
+
+    if curl -fsSL \
+        -X POST "${server_url}/System/Configuration/Branding" \
+        -H "Content-Type: application/json" \
+        -H "X-Emby-Authorization: ${api_header}" \
+        -d "$updated_branding" >/dev/null 2>&1; then
+        ok "Custom CSS set to import /abyss/abyss.css"
+        info "$(printf '%b' "$css" | head -1)"
+    else
+        fail "Failed to apply CSS via API."
+        info "Paste into Dashboard > General > Custom CSS:"
+        info "$(printf '%b' "$css")"
+    fi
     echo ""
 }
 
@@ -395,40 +563,10 @@ install_abyss() {
     fi
     echo ""
 
-    # Download spotlight and touch files
-    sync_spotlight_files "$abyss_dir"
-    sync_touch_files "$abyss_dir"
-
-    # Apply CSS
-    step "Applying Abyss CSS..."
-    local css="@import url('https://cdn.jsdelivr.net/gh/${REPO}@${BRANCH}/abyss.css');\n/* Customise Abyss: https://aumgupta.github.io/abyss-jellyfin/ */"
-    local branding
-    branding=$(curl -fsSL \
-        -X GET "${server_url}/Branding/Configuration" \
-        -H "X-Emby-Authorization: ${api_header}" 2>/dev/null) || true
-
-    if [[ -n "$branding" ]]; then
-        local updated_branding
-        updated_branding=$(echo "$branding" | python3 -c "
-import sys, json
-d = json.load(sys.stdin)
-d['CustomCss'] = sys.argv[1]
-print(json.dumps(d))
-" "$(printf '%b' "$css")")
-
-        curl -fsSL \
-            -X POST "${server_url}/System/Configuration/Branding" \
-            -H "Content-Type: application/json" \
-            -H "X-Emby-Authorization: ${api_header}" \
-            -d "$updated_branding" >/dev/null 2>&1 \
-            && ok "Abyss CSS applied." \
-            || { fail "Failed to apply CSS."; info "Add manually: Dashboard > General > Custom CSS"; }
-    else
-        fail "Could not fetch branding config."
-        info "Add manually in Dashboard > General > Custom CSS:"
-        info "@import url('https://cdn.jsdelivr.net/gh/${REPO}@${BRANCH}/abyss.css');"
-    fi
-    echo ""
+    # Copy theme (liquid glass + player), spotlight, and touch into jellyfin-web/abyss/
+    sync_all_abyss_assets "$abyss_dir"
+    verify_theme_install "$abyss_dir"
+    apply_custom_css "$server_url" "$api_header"
 
     # Configure display prefs
     step "Configuring theme settings..."
@@ -484,24 +622,19 @@ print(json.dumps(d))
     fi
     echo ""
 
-    # Install spotlight
+    # Install spotlight into web/ui/
     step "Installing Spotlight add-on..."
     echo ""
 
     local ui_dir="${web_dir}/ui"
-    if [[ ! -d "$ui_dir" ]]; then
-        mkdir -p "$ui_dir"
-        ok "Created ui folder."
-    else
-        skip "ui folder exists."
-    fi
+    ensure_writable_dir "$ui_dir"
 
     for f in "spotlight.html" "spotlight.css"; do
         local src="${abyss_dir}/${f}"
         local dest="${ui_dir}/${f}"
-        [[ ! -f "$src" ]] && exit_error "Missing file: ${f} - try running setup again to re-download."
+        [[ ! -f "$src" ]] && exit_error "Missing ${f} in ${abyss_dir} — sync_all_abyss_assets failed."
         cp -f "$src" "$dest"
-        ok "Copied: ${f}"
+        ok "Installed ui/${f}"
     done
 
     # Find chunk file
@@ -524,9 +657,9 @@ print(json.dumps(d))
     fi
 
     local chunk_src="${abyss_dir}/home-html.chunk.js"
-    [[ ! -f "$chunk_src" ]] && exit_error "Missing home-html.chunk.js - try running setup again."
+    [[ ! -f "$chunk_src" ]] && exit_error "Missing home-html.chunk.js in ${abyss_dir}."
     cp -f "$chunk_src" "$chunk_file"
-    ok "Chunk patched."
+    ok "Patched: $(basename "$chunk_file")"
     echo ""
 
     install_touch_ui "$web_dir" "$abyss_dir"
@@ -544,6 +677,13 @@ print(json.dumps(d))
     echo -e "${red}    1. Delete browser cache${reset}"
     echo -e "${yellow}    2. Hard refresh your browser (Ctrl+F5)${reset}"
     echo -e "${gray}    3. Relaunch Jellyfin Media Player if using the desktop app${reset}"
+    echo -e "${gray}    4. Docker: run inside the container from this repo:${reset}"
+    info "       docker exec -it jellyfin bash"
+    info "       cd /path/to/repo && ./setup.sh"
+    info "       (web dir: /jellyfin/jellyfin-web or set JELLYFIN_WEB_DIR)"
+    info "Theme served from: ${abyss_dir}/"
+    info "Custom CSS: @import url('/abyss/abyss.css')"
+    info "Verify in browser: ${server_url}/abyss/styles/abyss-player.css"
     echo ""
     echo -e "${yellow}  Important: Go to Settings > Display > Theme and set it to Dark${reset}"
     info "Abyss requires the Dark base theme to display correctly."
@@ -642,19 +782,32 @@ print(json.dumps(d))
         local path="${ui_dir}/${f}"
         if [[ -f "$path" ]]; then
             rm -f "$path"
-            ok "Removed: ${f}"
+            ok "Removed: ui/${f}"
         else
-            skip "Not found: ${f}"
+            skip "Not found: ui/${f}"
         fi
     done
 
     if [[ -d "$ui_dir" ]]; then
-        if [[ -z "$(ls -A "$ui_dir")" ]]; then
+        if [[ -z "$(ls -A "$ui_dir" 2>/dev/null)" ]]; then
             rm -rf "$ui_dir"
             ok "Removed empty ui folder."
         else
             skip "ui folder has other files, leaving in place."
         fi
+    fi
+    echo ""
+
+    # Remove copied theme from jellyfin-web/abyss/ (optional cleanup)
+    step "Removing theme files from jellyfin-web/abyss/..."
+    local abyss_dir="${web_dir}/abyss"
+    if [[ -d "$abyss_dir" ]]; then
+        rm -f "${abyss_dir}/abyss.css"
+        rm -f "${abyss_dir}"/*.html "${abyss_dir}"/*.js "${abyss_dir}"/*.css 2>/dev/null || true
+        rm -rf "${abyss_dir}/styles"
+        ok "Cleared ${abyss_dir}/"
+    else
+        skip "No abyss folder found."
     fi
     echo ""
 

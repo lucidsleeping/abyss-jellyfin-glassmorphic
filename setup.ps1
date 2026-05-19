@@ -17,6 +17,17 @@ $TOUCH_FILES = @(
     "scripts/touch/abyss-touch.js"
 )
 
+$THEME_FILES = @(
+    "abyss.css",
+    "styles/abyss-liquid-glass.css",
+    "styles/abyss-player.css",
+    "styles/abyss-touch.css",
+    "styles/abyss-je.css",
+    "styles/abyss-mbe.css"
+)
+
+$ScriptDir = $PSScriptRoot
+
 # Helpers 
 
 function Write-Step { param($msg) Write-Host " $msg" -ForegroundColor Cyan }
@@ -104,6 +115,40 @@ function Sync-SpotlightFiles {
         Get-AbyssFile $file $destPath
     }
     Write-Host ""
+}
+
+function Sync-ThemeFiles {
+    param($abyssDir)
+    Write-Step "Installing Abyss theme CSS..."
+    Write-Host ""
+    $stylesDir = Join-Path $abyssDir "styles"
+    New-Item -ItemType Directory -Path $stylesDir -Force | Out-Null
+
+    $localCss = Join-Path $ScriptDir "abyss.css"
+    if (Test-Path $localCss) {
+        Copy-Item -Path $localCss -Destination (Join-Path $abyssDir "abyss.css") -Force
+        Write-Ok "Installed: abyss.css (from local repo)"
+        Get-ChildItem -Path (Join-Path $ScriptDir "styles") -Filter "*.css" -ErrorAction SilentlyContinue | ForEach-Object {
+            Copy-Item -Path $_.FullName -Destination (Join-Path $stylesDir $_.Name) -Force
+            Write-Ok "Installed: styles/$($_.Name) (from local repo)"
+        }
+    } else {
+        Write-Warn "Local abyss.css not found; downloading theme from GitHub..."
+        foreach ($file in $THEME_FILES) {
+            if ($file -like "styles/*") {
+                $dest = Join-Path $abyssDir $file
+            } else {
+                $dest = Join-Path $abyssDir (Split-Path $file -Leaf)
+            }
+            Get-AbyssFile $file $dest
+        }
+    }
+    Write-Host ""
+}
+
+function Get-AbyssCssImport {
+    $version = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
+    return "@import url('/abyss/abyss.css?v=$version');`n/* Customise Abyss: https://aumgupta.github.io/abyss-jellyfin/ */"
 }
 
 function Sync-TouchFiles {
@@ -290,21 +335,22 @@ function Install-Abyss {
     }
     Write-Host ""
 
-    # Download spotlight and touch files (always fresh)
+    # Theme + spotlight + touch (local repo preferred for CSS)
+    Sync-ThemeFiles $abyssDir
     Sync-SpotlightFiles $abyssDir
     Sync-TouchFiles $abyssDir
 
-    # Apply Abyss CSS
+    # Apply Abyss CSS (served from jellyfin-web/abyss/, not jsDelivr)
     Write-Step "Applying Abyss CSS..."
     try {
         $branding           = Invoke-RestMethod -Uri "$serverUrl/Branding/Configuration" -Method Get -Headers $apiHeaders
-        $branding.CustomCss = "@import url('https://cdn.jsdelivr.net/gh/$REPO@$BRANCH/abyss.css');`n/* Customise Abyss: https://aumgupta.github.io/abyss-jellyfin/ */"
+        $branding.CustomCss = Get-AbyssCssImport
         Invoke-RestMethod -Uri "$serverUrl/System/Configuration/Branding" -Method Post -Headers $apiHeaders -Body ($branding | ConvertTo-Json -Depth 10) | Out-Null
         Write-Ok "Abyss CSS applied."
     } catch {
         Write-Fail "Failed to apply CSS."
         Write-Info "Add this manually in Dashboard > General > Custom CSS:"
-        Write-Info "@import url('https://cdn.jsdelivr.net/gh/$REPO@$BRANCH/abyss.css');"
+        Write-Info "@import url('/abyss/abyss.css');"
     }
     Write-Host ""
 
