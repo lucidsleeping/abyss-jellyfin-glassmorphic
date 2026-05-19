@@ -1,0 +1,352 @@
+/* Apple Liquid Glass — https://developer.apple.com/documentation/TechnologyOverviews/liquid-glass */
+
+:root {
+    /* Base material (dark UI chrome) */
+    --abyss-glass-tint: 28, 28, 32;
+    --abyss-glass-fill: 0.32;
+    --abyss-glass-fill-elevated: 0.48;
+    --abyss-glass-fill-subtle: 0.18;
+
+    /* Light glass surfaces (toolbar, knobs, active segments) */
+    --abyss-glass-surface: 255, 255, 255;
+    --abyss-glass-surface-fill: 0.16;
+    --abyss-glass-surface-elevated: 0.88;
+    --abyss-glass-track-fill: 0.1;
+
+    /* Capsule / pill glass (Hello World, Toggle) */
+    --abyss-glass-capsule-fill: 0.38;
+
+    --abyss-glass-blur: 24px;
+    --abyss-glass-blur-light: 16px;
+    --abyss-glass-blur-heavy: 36px;
+    --abyss-glass-saturate: 180%;
+    --abyss-glass-brightness: 1.12;
+
+    --abyss-glass-highlight: 255, 255, 255;
+    --abyss-glass-border-alpha: 0.32;
+    --abyss-glass-border-subtle: 0.14;
+    --abyss-glass-rim-alpha: 0.48;
+
+    --abyss-glass-filter: blur(var(--abyss-glass-blur)) saturate(var(--abyss-glass-saturate)) brightness(var(--abyss-glass-brightness));
+    --abyss-glass-filter-light: blur(var(--abyss-glass-blur-light)) saturate(165%) brightness(1.08);
+    --abyss-glass-filter-heavy: blur(var(--abyss-glass-blur-heavy)) saturate(190%) brightness(1.14);
+
+    /* Layered depth from reference UI */
+    --abyss-glass-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.14),
+        0 10px 32px rgba(0, 0, 0, 0.22);
+    --abyss-glass-shadow-float:
+        0 2px 8px rgba(0, 0, 0, 0.12),
+        0 12px 28px rgba(0, 0, 0, 0.18);
+    --abyss-glass-shadow-knob:
+        0 1px 2px rgba(0, 0, 0, 0.12),
+        0 4px 12px rgba(0, 0, 0, 0.18);
+
+    --abyss-glass-inset:
+        inset 0 1px 0 rgba(var(--abyss-glass-highlight), var(--abyss-glass-rim-alpha)),
+        inset 1px 0 0 rgba(var(--abyss-glass-highlight), 0.1);
+    --abyss-glass-inset-soft: inset 0 0.5px 0 rgba(var(--abyss-glass-highlight), 0.22);
+
+    --abyss-glass-slider-accent: 0, 122, 255;
+    --abyss-glass-text-muted: rgba(255, 255, 255, 0.52);
+
+    --abyss-radius-pill: 999px;
+    --abyss-radius-lg: 22px;
+    --abyss-radius-xl: 28px;
+    --abyss-radius-float: 32px;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+    :root {
+        --abyss-glass-fill: 0.9;
+        --abyss-glass-fill-elevated: 0.94;
+        --abyss-glass-fill-subtle: 0.85;
+        --abyss-glass-surface-fill: 0.85;
+        --abyss-glass-surface-elevated: 0.95;
+        --abyss-glass-capsule-fill: 0.9;
+        --abyss-glass-blur: 0px;
+        --abyss-glass-blur-light: 0px;
+        --abyss-glass-blur-heavy: 0px;
+        --abyss-glass-saturate: 100%;
+        --abyss-glass-brightness: 1;
+        --abyss-glass-filter: none;
+        --abyss-glass-filter-light: none;
+        --abyss-glass-filter-heavy: none;
+        --abyss-glass-inset: none;
+        --abyss-glass-inset-soft: none;
+    }
+}
+
+/* ── Floating panels (drawer, dialogs, player bar) ── */
+
+.abyss-liquid-glass,
+.mainDrawer,
+.editPageSidebar,
+.dialog,
+.toast,
+.manualLoginForm,
+.appfooter,
+.iconOsd,
+.nowPlayingBar,
+.readOnlyContent .verticalSection,
+.homeScreenSettingsContainer .paperList,
+.selectionCommandsPanel,
+.playerStats-stats,
+.upNextContainer,
+#jellyfin-enhanced-panel,
+.je-bm-player-modal-container {
+    border: 0.5px solid rgba(var(--abyss-glass-highlight), var(--abyss-glass-border-alpha)) !important;
+    box-shadow: var(--abyss-glass-shadow), var(--abyss-glass-inset);
+}
+
+/* ── Pill toolbar (reference: horizontal frosted bar) ── */
+
+.emby-tabs-slider,
+.headerTabs.sectionTabs,
+.selectionCommandsPanel,
+.actionSheetContent,
+.iconOsd {
+    border-radius: var(--abyss-radius-pill) !important;
+    border: 0.5px solid rgba(var(--abyss-glass-highlight), var(--abyss-glass-border-alpha)) !important;
+    box-shadow: var(--abyss-glass-shadow-float), var(--abyss-glass-inset) !important;
+    background-color: rgba(var(--abyss-glass-surface), var(--abyss-glass-surface-fill)) !important;
+}
+
+/* ── Segmented control (reference: Library / For You) ── */
+
+div[data-role="controlgroup"] {
+    border-radius: var(--abyss-radius-pill) !important;
+    padding: 4px !important;
+    background: rgba(var(--abyss-glass-surface), var(--abyss-glass-track-fill)) !important;
+    border: 0.5px solid rgba(var(--abyss-glass-highlight), var(--abyss-glass-border-subtle)) !important;
+    box-shadow: var(--abyss-glass-inset-soft) !important;
+}
+
+div[data-role="controlgroup"] a.ui-btn-active {
+    background: rgba(var(--abyss-glass-surface), var(--abyss-glass-surface-elevated)) !important;
+    color: #121212 !important;
+    border: 0.5px solid rgba(var(--abyss-glass-highlight), 0.55) !important;
+    box-shadow: var(--abyss-glass-shadow-knob), var(--abyss-glass-inset) !important;
+}
+
+div[data-role="controlgroup"] a[data-role="button"]:not(.ui-btn-active) {
+    background: transparent !important;
+    color: var(--abyss-glass-text-muted) !important;
+    box-shadow: none !important;
+}
+
+.emby-tabs-slider {
+    padding: 4px !important;
+    background-color: rgba(var(--abyss-glass-surface), var(--abyss-glass-track-fill)) !important;
+    border-color: rgba(var(--abyss-glass-highlight), var(--abyss-glass-border-subtle)) !important;
+}
+
+.emby-tab-button {
+    background: transparent !important;
+    color: var(--abyss-glass-text-muted) !important;
+    font-weight: 500 !important;
+    border: 0.5px solid transparent !important;
+    box-shadow: none !important;
+}
+
+.emby-tab-button:hover:not(.emby-tab-button-active) {
+    color: rgba(255, 255, 255, 0.78) !important;
+    background: rgba(var(--abyss-glass-surface), 0.08) !important;
+}
+
+.emby-tab-button-active {
+    background: rgba(var(--abyss-glass-surface), var(--abyss-glass-surface-elevated)) !important;
+    color: #121212 !important;
+    font-weight: 600 !important;
+    border: 0.5px solid rgba(var(--abyss-glass-highlight), 0.55) !important;
+    box-shadow: var(--abyss-glass-shadow-knob), var(--abyss-glass-inset) !important;
+}
+
+.emby-tab-button-active:hover {
+    color: #121212 !important;
+    background: rgba(var(--abyss-glass-surface), 0.95) !important;
+}
+
+/* ── Glass capsule buttons (reference: Toggle, Hello World) ── */
+
+.raised:not(.homeLibraryButton):not(:hover),
+.fab:not(:hover),
+a[data-role="button"]:not(:hover),
+.button-flat:not(:hover) {
+    background: rgba(var(--abyss-glass-tint), var(--abyss-glass-capsule-fill)) !important;
+    border: 0.5px solid rgba(var(--abyss-glass-highlight), var(--abyss-glass-border-subtle)) !important;
+    box-shadow: var(--abyss-glass-shadow-knob), var(--abyss-glass-inset-soft) !important;
+    color: rgba(255, 255, 255, 0.92) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+/* ── Circular glass icon buttons (reference: edit circle) ── */
+
+.paper-icon-button-light,
+.headerUserButtonRound {
+    background: rgba(var(--abyss-glass-surface), var(--abyss-glass-surface-fill)) !important;
+    border: 0.5px solid rgba(var(--abyss-glass-highlight), var(--abyss-glass-border-alpha)) !important;
+    box-shadow: var(--abyss-glass-shadow-knob), var(--abyss-glass-inset) !important;
+}
+
+.paper-icon-button-light:hover:not(:disabled) {
+    background: rgba(var(--abyss-glass-surface), 0.24) !important;
+    color: rgb(var(--abyss-accent)) !important;
+}
+
+/* ── Slider (reference: blue track + glass thumb) ── */
+
+.mdl-slider-background-upper,
+.mdl-slider-background-flex {
+    background: rgba(var(--abyss-glass-surface), 0.14) !important;
+    border-radius: var(--abyss-radius-pill) !important;
+}
+
+.mdl-slider-background-lower {
+    background-color: rgb(var(--abyss-glass-slider-accent)) !important;
+    border-radius: var(--abyss-radius-pill) !important;
+}
+
+.mdl-slider::-webkit-slider-thumb,
+.mdl-slider::-moz-range-thumb,
+.mdl-slider::-ms-thumb {
+    width: 26px !important;
+    height: 20px !important;
+    border-radius: 10px !important;
+    background: rgba(var(--abyss-glass-surface), 0.95) !important;
+    border: 0.5px solid rgba(var(--abyss-glass-highlight), 0.55) !important;
+    box-shadow: var(--abyss-glass-shadow-knob), var(--abyss-glass-inset) !important;
+}
+
+/* ── Toggle (reference: glass knob on track) ── */
+
+.mdl-switch__track {
+    background: rgba(var(--abyss-glass-surface), var(--abyss-glass-track-fill)) !important;
+    border: 0.5px solid rgba(var(--abyss-glass-highlight), var(--abyss-glass-border-subtle)) !important;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+}
+
+.mdl-switch__thumb {
+    background: rgba(var(--abyss-glass-surface), 0.92) !important;
+    border: 0.5px solid rgba(var(--abyss-glass-highlight), 0.45) !important;
+    box-shadow: var(--abyss-glass-shadow-knob), var(--abyss-glass-inset-soft) !important;
+}
+
+.mdl-switch__input:checked+.mdl-switch__label+.mdl-switch__trackContainer>.mdl-switch__track {
+    background: rgba(var(--abyss-glass-slider-accent), 0.55) !important;
+}
+
+.mdl-switch__input:checked+.mdl-switch__label+.mdl-switch__trackContainer>.mdl-switch__thumb {
+    background: rgba(var(--abyss-glass-surface), 0.98) !important;
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+
+    .abyss-liquid-glass,
+    .manualLoginForm,
+    .dialog,
+    .iconOsd,
+    .mainDrawer,
+    .editPageSidebar,
+    .toast,
+    .nowPlayingBar,
+    .readOnlyContent .verticalSection,
+    .button-submit,
+    .upNextContainer,
+    .selectionCommandsPanel,
+    .playerStats-stats,
+    .appfooter,
+    .homeScreenSettingsContainer .paperList {
+        -webkit-backdrop-filter: var(--abyss-glass-filter) !important;
+        backdrop-filter: var(--abyss-glass-filter) !important;
+        background-color: rgba(var(--abyss-glass-tint), var(--abyss-glass-fill)) !important;
+    }
+
+    .mainDrawer,
+    .editPageSidebar,
+    .appfooter,
+    #jellyfin-enhanced-panel,
+    .je-bm-player-modal-container {
+        background-color: rgba(var(--abyss-glass-tint), var(--abyss-glass-fill-elevated)) !important;
+    }
+
+    .emby-tabs-slider,
+    .headerTabs.sectionTabs,
+    .selectionCommandsPanel,
+    .actionSheetContent,
+    .iconOsd,
+    .paper-icon-button-light,
+    .headerUserButtonRound {
+        -webkit-backdrop-filter: var(--abyss-glass-filter-light) !important;
+        backdrop-filter: var(--abyss-glass-filter-light) !important;
+    }
+
+    .emby-tab-button-active {
+        -webkit-backdrop-filter: var(--abyss-glass-filter-light) !important;
+        backdrop-filter: var(--abyss-glass-filter-light) !important;
+    }
+
+    .raised:not(.homeLibraryButton):not(:hover),
+    .fab:not(:hover),
+    a[data-role="button"]:not(:hover) {
+        -webkit-backdrop-filter: var(--abyss-glass-filter-light) !important;
+        backdrop-filter: var(--abyss-glass-filter-light) !important;
+    }
+
+    .mdl-slider::-webkit-slider-thumb,
+    .mdl-slider::-moz-range-thumb {
+        -webkit-backdrop-filter: var(--abyss-glass-filter-light);
+        backdrop-filter: var(--abyss-glass-filter-light);
+    }
+
+    .skinHeader:not(.osdHeader),
+    .raised.cancel.block.btnForgotPassword.emby-button,
+    .btnQuick,
+    .pageTitle,
+    .headerButton {
+        -webkit-backdrop-filter: var(--abyss-glass-filter-light) !important;
+        backdrop-filter: var(--abyss-glass-filter-light) !important;
+    }
+
+    .skinHeader-withBackground::before {
+        -webkit-backdrop-filter: var(--abyss-glass-filter-heavy);
+        backdrop-filter: var(--abyss-glass-filter-heavy);
+        background: linear-gradient(
+            180deg,
+            rgba(var(--abyss-glass-tint), 0.5) 0%,
+            rgba(var(--abyss-glass-tint), 0.15) 55%,
+            transparent 100%
+        );
+    }
+
+    .paper-icon-button-light:hover,
+    #itemDetailPage .itemProgressBar,
+    #dashboardPage .backgroundProgress>div,
+    .indicator {
+        -webkit-backdrop-filter: var(--abyss-glass-filter-light);
+        backdrop-filter: var(--abyss-glass-filter-light);
+    }
+
+    @media all and (max-width: 75em) {
+        .cardOverlayButtonIcon {
+            background-color: rgba(var(--abyss-glass-surface), var(--abyss-glass-surface-fill)) !important;
+            -webkit-backdrop-filter: var(--abyss-glass-filter-light);
+            backdrop-filter: var(--abyss-glass-filter-light);
+            border: 0.5px solid rgba(var(--abyss-glass-highlight), var(--abyss-glass-border-subtle)) !important;
+            box-shadow: var(--abyss-glass-shadow-knob), var(--abyss-glass-inset-soft) !important;
+        }
+    }
+
+    #indexPage .itemProgressBar,
+    .libraryPage .itemProgressBar,
+    #itemDetailPage .itemProgressBar {
+        -webkit-backdrop-filter: var(--abyss-glass-filter-light);
+        backdrop-filter: var(--abyss-glass-filter-light);
+        background: rgba(var(--abyss-glass-tint), 0.35) !important;
+    }
+
+    body:has(.nowPlayingBar) .backgroundContainer.withBackdrop {
+        -webkit-backdrop-filter: var(--abyss-glass-filter);
+        backdrop-filter: var(--abyss-glass-filter);
+    }
+}

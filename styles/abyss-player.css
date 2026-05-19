@@ -1,0 +1,312 @@
+/* Jellyfin player — liquid glass OSD (aesthetic only) */
+
+/* ── Remove default Jellyfin gradients; let video show through ── */
+
+#videoOsdPage .videoOsdBottom {
+    background: none !important;
+    padding-top: 5em;
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+    pointer-events: none;
+}
+
+#videoOsdPage .skinHeader-withBackground.osdHeader {
+    background: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    height: auto;
+    min-height: 5em;
+    pointer-events: none;
+}
+
+#videoOsdPage .osdHeader .headerTop {
+    pointer-events: all;
+}
+
+/* ── Top-left title stack (S1 E2 + show name) ── */
+
+#videoOsdPage .osdTextContainer {
+    position: fixed;
+    top: max(20px, env(safe-area-inset-top));
+    left: max(20px, env(safe-area-inset-left));
+    right: auto;
+    bottom: auto;
+    z-index: 3;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 0 !important;
+    padding: 0 !important;
+    pointer-events: none;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
+}
+
+#videoOsdPage .osdTitleSmall {
+    font-size: 0.82rem;
+    font-weight: 500;
+    opacity: 0.88;
+    letter-spacing: 0.02em;
+    margin: 0 0 0.2em !important;
+    order: -1;
+}
+
+#videoOsdPage .osdTitle {
+    font-size: clamp(1.25rem, 2.8vw, 1.75rem);
+    font-weight: 700;
+    line-height: 1.15;
+    margin: 0 !important;
+    color: #fff;
+}
+
+#videoOsdPage .osdSecondaryMediaInfo {
+    font-size: 0.8rem;
+    opacity: 0.72;
+    padding-left: 0 !important;
+    margin-top: 0.15em;
+}
+
+/* ── Bottom control deck ── */
+
+#videoOsdPage .osdControls {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 0 max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left)) !important;
+    pointer-events: none;
+    max-width: 100%;
+}
+
+#videoOsdPage .osdControls > * {
+    pointer-events: all;
+}
+
+/* ── Full-width glass progress scrubber ── */
+
+#videoOsdPage .osdPositionSlider,
+#videoOsdPage .osdVolumeSliderContainer .mdl-slider {
+    width: 100%;
+    margin: 0 0 0.35em;
+}
+
+#videoOsdPage .osdPositionSlider .mdl-slider-container,
+#videoOsdPage .osdPositionSlider {
+    height: 20px;
+    display: flex;
+    align-items: center;
+}
+
+#videoOsdPage .osdPositionSlider .mdl-slider-background-flex,
+#videoOsdPage .osdPositionSlider .mdl-slider-background-upper,
+#videoOsdPage .nowPlayingBarPositionContainer .mdl-slider-background-flex,
+#videoOsdPage .nowPlayingBarPositionContainer .mdl-slider-background-upper {
+    height: 3px !important;
+    border-radius: var(--abyss-radius-pill, 999px) !important;
+    background: rgba(var(--abyss-glass-surface, 255, 255, 255), 0.22) !important;
+    -webkit-backdrop-filter: var(--abyss-glass-filter-light, blur(16px));
+    backdrop-filter: var(--abyss-glass-filter-light, blur(16px));
+    border: 0.5px solid rgba(var(--abyss-glass-highlight, 255, 255, 255), 0.12);
+}
+
+#videoOsdPage .osdPositionSlider .mdl-slider-background-lower,
+#videoOsdPage .nowPlayingBarPositionContainer .mdl-slider-background-lower {
+    height: 3px !important;
+    border-radius: var(--abyss-radius-pill, 999px) !important;
+    background: rgba(255, 255, 255, 0.92) !important;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.55), 0 0 2px rgba(255, 255, 255, 0.8);
+}
+
+#videoOsdPage .osdPositionSlider .mdl-slider::-webkit-slider-thumb,
+#videoOsdPage .osdPositionSlider .mdl-slider::-moz-range-thumb {
+    width: 10px !important;
+    height: 10px !important;
+    border-radius: 50% !important;
+    background: #fff !important;
+    border: none !important;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.7) !important;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+}
+
+#videoOsdPage .osdPositionSlider:hover .mdl-slider::-webkit-slider-thumb,
+#videoOsdPage .osdPositionSlider:hover .mdl-slider::-moz-range-thumb,
+#videoOsdPage .osdPositionSlider .mdl-slider:focus::-webkit-slider-thumb {
+    opacity: 1;
+}
+
+/* Time labels under scrubber */
+
+#videoOsdPage .startTimeText,
+#videoOsdPage .endTimeText,
+#videoOsdPage .osdTimeText,
+#videoOsdPage .endsAtText {
+    font-size: 0.72rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    color: rgba(255, 255, 255, 0.92);
+    opacity: 1 !important;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    width: auto;
+    margin: 0;
+}
+
+#videoOsdPage .osdTimeText {
+    margin-right: auto;
+    margin-left: 0;
+}
+
+#videoOsdPage .endsAtText {
+    margin-left: auto;
+    opacity: 0.85 !important;
+}
+
+/* ── Button row: left actions + right circular glass controls ── */
+
+#videoOsdPage .videoOsdBottom .buttons {
+    align-items: center;
+    gap: 0.5em;
+    padding-top: 0.65em;
+}
+
+#videoOsdPage .videoOsdBottom .paper-icon-button-light,
+#videoOsdPage .videoOsdBottom .emby-button {
+    border-radius: 50% !important;
+    min-width: 2.65rem;
+    min-height: 2.65rem;
+    background: rgba(var(--abyss-glass-surface, 255, 255, 255), var(--abyss-glass-surface-fill, 0.16)) !important;
+    border: 0.5px solid rgba(var(--abyss-glass-highlight, 255, 255, 255), var(--abyss-glass-border-alpha, 0.32)) !important;
+    box-shadow: var(--abyss-glass-shadow-knob), var(--abyss-glass-inset) !important;
+    -webkit-backdrop-filter: var(--abyss-glass-filter-light);
+    backdrop-filter: var(--abyss-glass-filter-light);
+    color: #fff !important;
+}
+
+#videoOsdPage .videoOsdBottom .paper-icon-button-light:hover:not(:disabled) {
+    background: rgba(var(--abyss-glass-surface, 255, 255, 255), 0.26) !important;
+    color: #fff !important;
+    transform: scale(1.04);
+}
+
+/* Play / pause — slightly larger focal control */
+#videoOsdPage .videoOsdBottom .btnPause,
+#videoOsdPage .videoOsdBottom .btnPlay {
+    min-width: 3rem;
+    min-height: 3rem;
+    font-size: 130%;
+}
+
+/* Group transport + settings to the right like reference */
+#videoOsdPage .videoOsdBottom .volumeButtons,
+#videoOsdPage .videoOsdBottom .osdMediaStatus {
+    margin-left: auto;
+    gap: 0.35em;
+}
+
+#videoOsdPage .osdVolumeSliderContainer {
+    max-width: 7em;
+}
+
+#videoOsdPage .osdVolumeSliderContainer .mdl-slider-background-lower {
+    background: rgba(255, 255, 255, 0.75) !important;
+    box-shadow: none;
+}
+
+/* Volume OSD popup */
+#videoOsdPage .iconOsd {
+    right: max(20px, env(safe-area-inset-right));
+    top: auto;
+    bottom: calc(7.5em + env(safe-area-inset-bottom, 0px));
+    border-radius: var(--abyss-radius-pill, 999px) !important;
+    padding: 0.35em 0.75em;
+    background: rgba(var(--abyss-glass-surface, 255, 255, 255), var(--abyss-glass-surface-fill, 0.16)) !important;
+    border: 0.5px solid rgba(var(--abyss-glass-highlight, 255, 255, 255), var(--abyss-glass-border-alpha, 0.32)) !important;
+    box-shadow: var(--abyss-glass-shadow-knob), var(--abyss-glass-inset) !important;
+    -webkit-backdrop-filter: var(--abyss-glass-filter-light);
+    backdrop-filter: var(--abyss-glass-filter-light);
+}
+
+#videoOsdPage .iconOsdProgressInner {
+    background: rgba(255, 255, 255, 0.9) !important;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.45);
+}
+
+/* ── Now playing bar (mini player while browsing) ── */
+
+.nowPlayingBar {
+    background: rgba(var(--abyss-glass-tint), var(--abyss-glass-fill-elevated)) !important;
+    border: 0.5px solid rgba(var(--abyss-glass-highlight), var(--abyss-glass-border-alpha)) !important;
+    border-bottom: none !important;
+    box-shadow: var(--abyss-glass-shadow), var(--abyss-glass-inset) !important;
+    margin: 0 16px 16px;
+    border-radius: var(--abyss-radius-lg, 22px) !important;
+    padding: 10px 14px 12px !important;
+}
+
+.nowPlayingBarPositionContainer .mdl-slider-background-flex,
+.nowPlayingBarPositionContainer .mdl-slider-background-upper {
+    height: 3px !important;
+    border-radius: var(--abyss-radius-pill, 999px) !important;
+    background: rgba(var(--abyss-glass-surface, 255, 255, 255), 0.18) !important;
+}
+
+.nowPlayingBarPositionContainer .mdl-slider-background-lower {
+    height: 3px !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.45);
+}
+
+.nowPlayingBar .paper-icon-button-light,
+.nowPlayingBar .mediaButton {
+    border-radius: 50% !important;
+    background: rgba(var(--abyss-glass-surface, 255, 255, 255), var(--abyss-glass-surface-fill, 0.16)) !important;
+    border: 0.5px solid rgba(var(--abyss-glass-highlight, 255, 255, 255), var(--abyss-glass-border-subtle, 0.14)) !important;
+    box-shadow: var(--abyss-glass-shadow-knob), var(--abyss-glass-inset-soft) !important;
+    -webkit-backdrop-filter: var(--abyss-glass-filter-light);
+    backdrop-filter: var(--abyss-glass-filter-light);
+}
+
+.nowPlayingBarText {
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.nowPlayingBarCurrentTime {
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.85;
+    width: auto;
+    padding-left: 0.75em;
+}
+
+/* Player stats overlay */
+.playerStats-stats {
+    background: rgba(var(--abyss-glass-tint), var(--abyss-glass-fill-elevated)) !important;
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    .nowPlayingBar {
+        -webkit-backdrop-filter: var(--abyss-glass-filter) !important;
+        backdrop-filter: var(--abyss-glass-filter) !important;
+    }
+}
+
+@media (max-width: 43em) {
+    #videoOsdPage .osdTextContainer {
+        left: max(12px, env(safe-area-inset-left));
+        max-width: 70vw;
+    }
+
+    #videoOsdPage .osdTitle {
+        font-size: 1.1rem;
+    }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+    #videoOsdPage .osdPositionSlider .mdl-slider-background-flex,
+    #videoOsdPage .osdPositionSlider .mdl-slider-background-upper {
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+        background: rgba(80, 80, 86, 0.65) !important;
+    }
+}

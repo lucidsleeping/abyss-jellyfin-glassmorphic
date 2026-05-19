@@ -145,11 +145,12 @@ body {
 	display: inline-flex;
 	align-items: center;
 	gap: 5px;
-	background: rgba(40, 40, 40, 0.75);
-	backdrop-filter: blur(8px);
-	-webkit-backdrop-filter: blur(8px);
-	border: 1px solid rgba(255, 255, 255, 0.15);
-	border-radius: 8px;
+	background: rgba(var(--abyss-glass-surface, 255, 255, 255), var(--abyss-glass-surface-fill, 0.16));
+	-webkit-backdrop-filter: var(--abyss-glass-filter-light, blur(16px) saturate(165%));
+	backdrop-filter: var(--abyss-glass-filter-light, blur(16px) saturate(165%));
+	border: 0.5px solid rgba(var(--abyss-glass-highlight, 255, 255, 255), var(--abyss-glass-border-alpha, 0.32));
+	box-shadow: var(--abyss-glass-shadow-knob, 0 1px 2px rgba(0,0,0,.12), 0 4px 12px rgba(0,0,0,.18)), var(--abyss-glass-inset-soft, inset 0 0.5px 0 rgba(255,255,255,.22));
+	border-radius: var(--abyss-radius-pill, 999px);
 	padding: 4px 12px;
 	font-size: 0.78rem;
 	font-weight: 600;
@@ -220,10 +221,12 @@ body {
 
 .btn-play {
 	font-size: large;
-	border-radius: 12px !important;
-	background: rgba(255, 255, 255, 0.95);
+	border-radius: var(--abyss-radius-lg, 22px) !important;
+	background: rgba(var(--abyss-glass-surface, 255, 255, 255), var(--abyss-glass-surface-elevated, 0.88));
 	color: #111;
 	margin-right: 12px;
+	border: 0.5px solid rgba(var(--abyss-glass-highlight, 255, 255, 255), 0.55);
+	box-shadow: var(--abyss-glass-shadow-knob), var(--abyss-glass-inset);
 }
 
 .btn-play:hover {
@@ -233,10 +236,11 @@ body {
 }
 
 .btn-info {
-	background: rgba(255, 255, 255, 0.12);
-	backdrop-filter: blur(8px);
-	-webkit-backdrop-filter: blur(8px);
-	border: 1px solid rgba(255, 255, 255, 0.2) !important;
+	background: rgba(var(--abyss-glass-tint, 32, 32, 36), var(--abyss-glass-fill-subtle, 0.28));
+	-webkit-backdrop-filter: var(--abyss-glass-filter-light, blur(14px) saturate(150%));
+	backdrop-filter: var(--abyss-glass-filter-light, blur(14px) saturate(150%));
+	border: 1px solid rgba(var(--abyss-glass-highlight, 255, 255, 255), var(--abyss-glass-border-alpha, 0.22)) !important;
+	box-shadow: var(--abyss-glass-inset-soft, inset 0 0.5px 0 rgba(255, 255, 255, 0.14));
 	color: rgba(255, 255, 255, 0.9);
 	padding: 8px;
 }
@@ -265,11 +269,11 @@ body {
 	justify-content: center;
 	padding: 8px 5px;
 	border-radius: 50px;
-	background: rgba(42, 42, 42, 0.42);
-	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-	border: 0.5px solid rgba(87, 87, 87, 0.1);
-	backdrop-filter: blur(15px);
-	--webkit-backdrop-filter: blur(15px);
+	background: rgba(var(--abyss-glass-tint, 32, 32, 36), var(--abyss-glass-fill-subtle, 0.28));
+	box-shadow: var(--abyss-glass-shadow, 0 8px 40px rgba(0, 0, 0, 0.2)), var(--abyss-glass-inset-soft, inset 0 0.5px 0 rgba(255, 255, 255, 0.14));
+	border: 1px solid rgba(var(--abyss-glass-highlight, 255, 255, 255), var(--abyss-glass-border-subtle, 0.12));
+	-webkit-backdrop-filter: var(--abyss-glass-filter, blur(28px) saturate(170%));
+	backdrop-filter: var(--abyss-glass-filter, blur(28px) saturate(170%));
 }
 
 .dot {
@@ -338,11 +342,12 @@ body {
 	display: flex;
 	align-items: center;
 	gap: 8px;
-	background: rgba(18, 18, 18, 0.82);
-	backdrop-filter: blur(14px);
-	-webkit-backdrop-filter: blur(14px);
-	border: 1px solid rgba(255, 255, 255, 0.12);
-	border-radius: 12px;
+	background: rgba(var(--abyss-glass-tint, 32, 32, 36), var(--abyss-glass-fill-elevated, 0.55));
+	-webkit-backdrop-filter: var(--abyss-glass-filter-light, blur(14px) saturate(150%));
+	backdrop-filter: var(--abyss-glass-filter-light, blur(14px) saturate(150%));
+	border: 1px solid rgba(var(--abyss-glass-highlight, 255, 255, 255), var(--abyss-glass-border-alpha, 0.22));
+	box-shadow: var(--abyss-glass-shadow, 0 8px 40px rgba(0, 0, 0, 0.2)), var(--abyss-glass-inset, inset 0 1px 0 rgba(255, 255, 255, 0.28));
+	border-radius: var(--abyss-radius-lg, 22px);
 	padding: 9px 10px 9px 14px;
 	max-width: 340px;
 }

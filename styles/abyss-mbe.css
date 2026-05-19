@@ -18,18 +18,21 @@
 }
 
 #slides-container .detailButton {
-    background: rgb(var(--abyss-accent)) !important;
+    background: rgba(var(--abyss-glass-surface, 255, 255, 255), var(--abyss-glass-surface-elevated, 0.88)) !important;
     color: #121212;
     font-weight: 700;
-    border-radius: 12px !important;
+    border-radius: var(--abyss-radius-lg, 22px) !important;
+    border: 0.5px solid rgba(var(--abyss-glass-highlight), 0.55) !important;
+    box-shadow: var(--abyss-glass-shadow-knob), var(--abyss-glass-inset) !important;
 }
 
 #slides-container .favorite-button,
 #slides-container .detail-button {
-    background: rgba(255, 255, 255, 0.12) !important;
-    backdrop-filter: blur(8px) !important;
-    -webkit-backdrop-filter: blur(8px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    background: rgba(var(--abyss-glass-tint), var(--abyss-glass-fill-subtle)) !important;
+    -webkit-backdrop-filter: var(--abyss-glass-filter-light) !important;
+    backdrop-filter: var(--abyss-glass-filter-light) !important;
+    border: 1px solid rgba(var(--abyss-glass-highlight), var(--abyss-glass-border-alpha)) !important;
+    box-shadow: var(--abyss-glass-inset-soft);
     color: rgba(255, 255, 255, 0.9) !important;
     padding: 8px !important;
 }
@@ -47,10 +50,11 @@
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    background: rgba(40, 40, 40, 0.75);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(var(--abyss-glass-tint), var(--abyss-glass-fill-subtle));
+    -webkit-backdrop-filter: var(--abyss-glass-filter-light);
+    backdrop-filter: var(--abyss-glass-filter-light);
+    border: 1px solid rgba(var(--abyss-glass-highlight), var(--abyss-glass-border-subtle));
+    box-shadow: var(--abyss-glass-inset-soft);
     padding: 4px 12px;
     font-size: 0.78rem;
     font-weight: 600;

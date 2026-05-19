@@ -18,14 +18,15 @@
     transition:
         opacity 0.22s var(--abyss-ease, ease),
         transform 0.22s var(--abyss-ease, ease);
-    background: rgba(var(--abyss-glass-tint, 42, 42, 42), 0.72);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    background: rgba(var(--abyss-glass-tint, 32, 32, 36), var(--abyss-glass-fill-elevated, 0.55));
+    -webkit-backdrop-filter: var(--abyss-glass-filter-light, blur(14px) saturate(150%));
+    backdrop-filter: var(--abyss-glass-filter-light, blur(14px) saturate(150%));
     color: rgb(var(--abyss-accent, 245, 245, 247));
-    font-family: "Google Sans", system-ui, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Google Sans", system-ui, sans-serif;
     font-weight: 600;
     letter-spacing: 0.02em;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    box-shadow: var(--abyss-glass-shadow, 0 8px 40px rgba(0, 0, 0, 0.2)), var(--abyss-glass-inset, inset 0 1px 0 rgba(255, 255, 255, 0.28));
+    border: 1px solid rgba(var(--abyss-glass-highlight, 255, 255, 255), var(--abyss-glass-border-alpha, 0.22));
 }
 
 #abyss-seek-feedback.is-visible {
@@ -64,9 +65,8 @@
         min-height: 2.25rem;
     }
 
-    .videoOsdBottom {
-        padding-bottom: max(12px, env(safe-area-inset-bottom)) !important;
-        margin-bottom: max(12px, env(safe-area-inset-bottom)) !important;
+    #videoOsdPage .videoOsdBottom {
+        padding-bottom: max(20px, env(safe-area-inset-bottom)) !important;
     }
 
     .skinHeader.osdHeader {
