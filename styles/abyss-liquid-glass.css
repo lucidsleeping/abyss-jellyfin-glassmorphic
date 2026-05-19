@@ -183,16 +183,7 @@ div[data-role="controlgroup"] a[data-role="button"]:not(.ui-btn-active) {
     contain: paint;
 }
 
-/* Header tabs: inset rim + negative margin caused stacked “ghost” arcs above the pill */
-.headerTabs .emby-tabs-slider {
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.16) !important;
-}
-
-.headerTabs .emby-tab-button-active {
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-    box-shadow: var(--abyss-glass-shadow-knob) !important;
-}
+/* Header Home/Favorites — see block below (no track bar / ghost rims) */
 
 .emby-tab-button {
     background: transparent !important;
@@ -218,6 +209,67 @@ div[data-role="controlgroup"] a[data-role="button"]:not(.ui-btn-active) {
 .emby-tab-button-active:hover {
     color: #121212 !important;
     background: rgba(var(--abyss-glass-surface), 0.95) !important;
+}
+
+/* ── Header Home/Favorites: no outer track bar, no stacked ghost rims ── */
+
+.skinHeader:not(.osdHeader) .headerTabs.sectionTabs,
+.skinHeader:not(.osdHeader) .headerTabs.emby-tabs {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.skinHeader:not(.osdHeader) .headerTabs .emby-tabs-slider {
+    padding: 0 !important;
+    display: inline-flex !important;
+    gap: 0.35em;
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+    contain: none !important;
+    isolation: auto !important;
+}
+
+.skinHeader:not(.osdHeader) .headerTabs .emby-tabs-slider::before,
+.skinHeader:not(.osdHeader) .headerTabs .emby-tabs-slider::after {
+    display: none !important;
+    content: none !important;
+}
+
+.skinHeader:not(.osdHeader) .headerTabs .emby-tab-button {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    color: rgba(255, 255, 255, 0.55) !important;
+    padding: 0.5em 1.35em !important;
+    border-radius: var(--abyss-radius-pill) !important;
+}
+
+.skinHeader:not(.osdHeader) .headerTabs .emby-tab-button:hover:not(.emby-tab-button-active) {
+    color: rgba(255, 255, 255, 0.88) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.skinHeader:not(.osdHeader) .headerTabs .emby-tab-button-active {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: rgba(255, 255, 255, 0.93) !important;
+    color: #121212 !important;
+    border: none !important;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.22) !important;
+}
+
+.skinHeader:not(.osdHeader) .headerTabs .emby-tab-button-active:hover {
+    color: #121212 !important;
+    background: rgba(255, 255, 255, 0.97) !important;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.22) !important;
 }
 
 /* ── Glass capsule buttons (reference: Toggle, Hello World) ── */

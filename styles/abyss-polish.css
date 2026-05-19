@@ -146,17 +146,13 @@
 .skinHeader:not(.osdHeader) .paper-icon-button-light,
 .skinHeader:not(.osdHeader) .headerUserButtonRound,
 .skinHeader:not(.osdHeader) .headerButton,
-.skinHeader:not(.osdHeader) .headerTabs,
 .skinHeader:not(.osdHeader) .headerLeft,
 .skinHeader:not(.osdHeader) .headerRight {
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
 }
 
-/* Tab pill: solid glass tint, no backdrop blur */
-.skinHeader:not(.osdHeader) .headerTabs .emby-tabs-slider {
-    background-color: rgba(var(--abyss-glass-surface), 0.38) !important;
-}
+/* Home/Favorites track bar + ghost rims — styles/abyss-liquid-glass.css */
 
 /* ── 5. Video player: restore back button ── */
 
