@@ -16,20 +16,40 @@
     /* Capsule / pill glass (Hello World, Toggle) */
     --abyss-glass-capsule-fill: 0.38;
 
-    --abyss-glass-blur: 24px;
-    --abyss-glass-blur-light: 16px;
-    --abyss-glass-blur-heavy: 36px;
-    --abyss-glass-saturate: 180%;
-    --abyss-glass-brightness: 1.12;
+    --abyss-glass-blur: 28px;
+    --abyss-glass-blur-light: 20px;
+    --abyss-glass-blur-heavy: 44px;
+    --abyss-glass-saturate: 195%;
+    --abyss-glass-brightness: 1.14;
+    --abyss-glass-contrast: 1.04;
 
     --abyss-glass-highlight: 255, 255, 255;
     --abyss-glass-border-alpha: 0.32;
     --abyss-glass-border-subtle: 0.14;
     --abyss-glass-rim-alpha: 0.48;
 
-    --abyss-glass-filter: blur(var(--abyss-glass-blur)) saturate(var(--abyss-glass-saturate)) brightness(var(--abyss-glass-brightness));
-    --abyss-glass-filter-light: blur(var(--abyss-glass-blur-light)) saturate(165%) brightness(1.08);
-    --abyss-glass-filter-heavy: blur(var(--abyss-glass-blur-heavy)) saturate(190%) brightness(1.14);
+    --abyss-glass-filter: blur(var(--abyss-glass-blur)) saturate(var(--abyss-glass-saturate)) brightness(var(--abyss-glass-brightness)) contrast(var(--abyss-glass-contrast));
+    --abyss-glass-filter-light: blur(var(--abyss-glass-blur-light)) saturate(175%) brightness(1.1) contrast(1.03);
+    --abyss-glass-filter-heavy: blur(var(--abyss-glass-blur-heavy)) saturate(210%) brightness(1.16) contrast(1.05);
+
+    /* Refractive face — layered gradient over blur */
+    --abyss-glass-face: linear-gradient(
+        148deg,
+        rgba(var(--abyss-glass-highlight), 0.26) 0%,
+        rgba(var(--abyss-glass-highlight), 0.06) 38%,
+        rgba(var(--abyss-glass-highlight), 0.14) 100%
+    );
+    --abyss-glass-face-strong: linear-gradient(
+        165deg,
+        rgba(var(--abyss-glass-highlight), 0.42) 0%,
+        rgba(var(--abyss-glass-highlight), 0.12) 45%,
+        rgba(var(--abyss-glass-highlight), 0.22) 100%
+    );
+    --abyss-glass-specular: linear-gradient(
+        180deg,
+        rgba(var(--abyss-glass-highlight), 0.55) 0%,
+        rgba(var(--abyss-glass-highlight), 0) 42%
+    );
 
     /* Layered depth from reference UI */
     --abyss-glass-shadow:
@@ -43,9 +63,13 @@
         0 4px 12px rgba(0, 0, 0, 0.18);
 
     --abyss-glass-inset:
-        inset 0 1px 0 rgba(var(--abyss-glass-highlight), var(--abyss-glass-rim-alpha)),
-        inset 1px 0 0 rgba(var(--abyss-glass-highlight), 0.1);
-    --abyss-glass-inset-soft: inset 0 0.5px 0 rgba(var(--abyss-glass-highlight), 0.22);
+        inset 0 1px 1px rgba(var(--abyss-glass-highlight), var(--abyss-glass-rim-alpha)),
+        inset 1px 0 0 rgba(var(--abyss-glass-highlight), 0.14),
+        inset 0 -0.5px 0 rgba(var(--abyss-glass-highlight), 0.08);
+    --abyss-glass-inset-soft: inset 0 0.5px 0 rgba(var(--abyss-glass-highlight), 0.28);
+    --abyss-glass-depth:
+        0 2px 4px rgba(0, 0, 0, 0.1),
+        0 14px 36px rgba(0, 0, 0, 0.24);
 
     --abyss-glass-slider-accent: 0, 122, 255;
     --abyss-glass-text-muted: rgba(255, 255, 255, 0.52);
@@ -96,7 +120,7 @@
 #jellyfin-enhanced-panel,
 .je-bm-player-modal-container {
     border: 0.5px solid rgba(var(--abyss-glass-highlight), var(--abyss-glass-border-alpha)) !important;
-    box-shadow: var(--abyss-glass-shadow), var(--abyss-glass-inset);
+    box-shadow: var(--abyss-glass-depth, var(--abyss-glass-shadow)), var(--abyss-glass-inset);
 }
 
 /* ── Pill toolbar (reference: horizontal frosted bar) ── */
