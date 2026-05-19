@@ -420,6 +420,8 @@ body:has(#itemDetailPage) .backdropImage {
     box-shadow: var(--abyss-glass-inset-soft);
 }
 
+/* actionSheet listItemIcon — styles/abyss-polish.css */
+
 [dir=ltr] .navMenuOption {
     padding: 0.5em 0.9em !important;
     margin-bottom: 2px !important;

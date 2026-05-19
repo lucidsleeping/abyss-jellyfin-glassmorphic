@@ -1,37 +1,73 @@
 /* Abyss — UI polish: menus, cards, typography, header blur, player back */
 
-/* ── 1. Context menu: subtle row highlight (not full accent pill) ── */
+/* ── 1. Context menu: one glass panel, no pill ghost / accent bleed ── */
 
 .actionSheetContent {
-    padding: 0.5em !important;
+    border-radius: var(--abyss-radius-lg, 18px) !important;
+    padding: 0.45em !important;
+    overflow: hidden !important;
+    background-color: rgba(var(--abyss-glass-tint), var(--abyss-glass-fill-elevated, 0.48)) !important;
+    border: 0.5px solid rgba(var(--abyss-glass-highlight), 0.2) !important;
+    box-shadow: 0 14px 42px rgba(0, 0, 0, 0.38) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(175%);
+    backdrop-filter: blur(28px) saturate(175%);
 }
 
-.actionSheetMenuItem {
+.actionSheetContent::before,
+.actionSheetContent::after {
+    display: none !important;
+    content: none !important;
+}
+
+.actionSheetMenuItem,
+.actionSheetContent .listItem.actionSheetMenuItem {
     display: flex !important;
     align-items: center;
-    gap: 0.75em;
-    padding: 0.55em 0.9em !important;
-    margin: 0.12em 0 !important;
+    gap: 0.65em;
+    padding: 0.52em 0.85em !important;
+    margin: 0.1em 0 !important;
     font-weight: 500 !important;
     font-size: 0.95rem !important;
     letter-spacing: 0.01em;
-    border-radius: calc(var(--abyss-radius-pill, 999px) * 0.35) !important;
-    border: 0.5px solid transparent !important;
+    border-radius: 10px !important;
+    border: none !important;
     box-shadow: none !important;
+    background: transparent !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    overflow: hidden !important;
 }
 
-.actionSheetMenuItem:hover,
-.actionSheetMenuItem:focus {
-    background: rgba(var(--abyss-glass-surface), 0.14) !important;
-    color: rgba(255, 255, 255, 0.96) !important;
+/* Block global .listItem / .raised accent hovers inside menus */
+.actionSheetContent .listItem:hover,
+.actionSheetContent .listItem:focus,
+.actionSheetContent .actionSheetMenuItem:hover,
+.actionSheetContent .actionSheetMenuItem:focus,
+.actionSheetContent .listItem.actionSheetMenuItem:hover,
+.actionSheetContent .listItem-content:hover {
+    background: rgba(255, 255, 255, 0.11) !important;
+    color: rgba(255, 255, 255, 0.98) !important;
     font-weight: 500 !important;
-    border-color: rgba(var(--abyss-glass-highlight), 0.12) !important;
+    border: none !important;
     box-shadow: none !important;
 }
 
-.actionSheetMenuItem .listItemIcon {
+.actionSheetMenuItem .listItemIcon,
+.actionSheetContent .listItemIcon,
+.actionSheetContent [dir="ltr"] .listItemIcon {
     margin: 0 !important;
     flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 50% !important;
+    padding: 0.42em !important;
+    min-width: 2.1em;
+    min-height: 2.1em;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.actionsheetDivider {
+    margin: 0.25em 0.65em !important;
+    opacity: 0.35;
 }
 
 /* ── 2. Card overlay buttons: spacing, no stacked glass rims ── */
