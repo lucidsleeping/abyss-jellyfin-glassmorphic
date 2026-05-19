@@ -296,10 +296,7 @@ verify_theme_install() {
 
 # Served from jellyfin-web/abyss/ (not jsDelivr)
 abyss_css_import() {
-    local version
-    version="$(date +%s)"
-    # bundle loads abyss.css then abyss-polish.css (polish must follow theme rules)
-    printf "@import url('/web/abyss/abyss-bundle.css?v=%s');\n/* Abyss — served from jellyfin-web/abyss/ */" "$version"
+    printf "@import url('/web/abyss/abyss-bundle.css');\n/* Abyss — abyss.css + polish (cascade order) */"
 }
 
 apply_custom_css() {
@@ -337,7 +334,7 @@ print(json.dumps(d))
         -H "Content-Type: application/json" \
         -H "X-Emby-Authorization: ${api_header}" \
         -d "$updated_branding" >/dev/null 2>&1; then
-        ok "Custom CSS set to import /web/abyss/abyss.css"
+        ok "Custom CSS set to import /web/abyss/abyss-bundle.css"
         info "$(printf '%b' "$css" | head -1)"
     else
         fail "Failed to apply CSS via API."
@@ -705,7 +702,7 @@ print(json.dumps(d))
     info "       cd /path/to/repo && ./setup.sh"
     info "       (web dir: /jellyfin/jellyfin-web or set JELLYFIN_WEB_DIR)"
     info "Theme served from: ${abyss_dir}/"
-    info "Custom CSS: @import url('/web/abyss/abyss.css')"
+    info "Custom CSS: @import url('/web/abyss/abyss-bundle.css');"
     info "Verify in browser: ${server_url}/web/abyss/styles/abyss-player.css"
     echo ""
     echo -e "${yellow}  Important: Go to Settings > Display > Theme and set it to Dark${reset}"

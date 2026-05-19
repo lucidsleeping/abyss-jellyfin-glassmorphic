@@ -336,16 +336,7 @@ input[type="radio"]:checked {
     justify-content: center !important;
 }
 
-.skinHeader.semiTransparent {
-    background: none !important;
-    background-color: transparent !important;
-    background-image: none !important;
-}
-
-/* skinHeader-withBackground blur bar — disabled in styles/abyss-polish.css */
-.skinHeader-withBackground::before {
-    display: none;
-}
+/* header bar + semiTransparent — styles/abyss-polish.css */
 
 /* headerLeft / headerRight padding — styles/abyss-layout.css */
 

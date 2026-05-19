@@ -150,8 +150,7 @@ function Sync-ThemeFiles {
 }
 
 function Get-AbyssCssImport {
-    $version = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
-    return "@import url('/web/abyss/abyss-bundle.css?v=$version');`n/* Abyss — abyss.css + abyss-polish.css in cascade order */"
+    return "@import url('/web/abyss/abyss-bundle.css');`n/* Abyss — abyss.css + abyss-polish.css in cascade order */"
 }
 
 function Sync-TouchFiles {
@@ -353,7 +352,7 @@ function Install-Abyss {
     } catch {
         Write-Fail "Failed to apply CSS."
         Write-Info "Add this manually in Dashboard > General > Custom CSS:"
-        Write-Info "@import url('/web/abyss/abyss.css');"
+        Write-Info "@import url('/web/abyss/abyss-bundle.css');"
     }
     Write-Host ""
 

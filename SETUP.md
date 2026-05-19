@@ -110,12 +110,12 @@ services:
 Either set `ABYSS_ADMIN_USER` / `ABYSS_ADMIN_PASSWORD` so the script applies this via API, or paste manually in **Dashboard > General > Custom CSS**:
 
 ```css
-@import url('/web/abyss/abyss.css');
+@import url('/web/abyss/abyss-bundle.css');
 ```
 
 **4. Restart** and check logs: `docker logs jellyfin 2>&1 | grep abyss`
 
-Verify theme: `http://YOUR_SERVER:8096/abyss/styles/abyss-layout.css`  
+Verify theme: `http://YOUR_SERVER:8096/web/abyss/styles/abyss-layout.css`  
 Verify Spotlight: home page shows the Continue Watching hero banner.
 
 </details>

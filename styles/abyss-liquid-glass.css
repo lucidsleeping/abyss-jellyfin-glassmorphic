@@ -356,7 +356,6 @@ a[data-role="button"]:not(:hover),
         backdrop-filter: var(--abyss-glass-filter-light);
     }
 
-  /* .skinHeader blur — disabled; see abyss-polish.css */
     .raised.cancel.block.btnForgotPassword.emby-button,
     .btnQuick,
     .pageTitle,
@@ -364,8 +363,6 @@ a[data-role="button"]:not(:hover),
         -webkit-backdrop-filter: var(--abyss-glass-filter-light) !important;
         backdrop-filter: var(--abyss-glass-filter-light) !important;
     }
-
-    /* Header blur feather — styles/abyss-polish.css */
 
     .paper-icon-button-light:hover,
     #itemDetailPage .itemProgressBar,

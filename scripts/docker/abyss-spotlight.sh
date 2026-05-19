@@ -192,7 +192,7 @@ apply_custom_css_api() {
     export JELLYFIN_URL="$url"
     export ABYSS_ADMIN_USER="$user"
     export ABYSS_ADMIN_PASSWORD="$pass"
-    export ABYSS_CSS="@import url('/web/abyss/abyss-bundle.css?v=$(date +%s)');"
+    export ABYSS_CSS="@import url('/web/abyss/abyss-bundle.css');"
     log "Applying Custom CSS via Jellyfin API..."
 
     if python3 <<'PY'; then
@@ -279,7 +279,7 @@ install_touch
 link_ui_scripts
 
 export JELLYFIN_URL="${JELLYFIN_URL:-http://127.0.0.1:8096}"
-export ABYSS_CSS="@import url('/web/abyss/abyss-bundle.css?v=$(date +%s)');"
+export ABYSS_CSS="@import url('/web/abyss/abyss-bundle.css');"
 apply_custom_css_api
 
 log "Done. Theme: ${ABYSS_DIR}/"
