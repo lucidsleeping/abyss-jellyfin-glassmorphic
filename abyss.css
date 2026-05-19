@@ -548,15 +548,8 @@ a[data-role="button"] {
         box-shadow 0.37s var(--abyss-ease) !important;
 }
 
-.raised:hover,
-.fab:hover,
-a[data-role="button"]:hover {
-    background: rgba(var(--abyss-accent), 0.5) !important;
-}
+/* Button hover glass + prism — styles/abyss-liquid-glass-buttons.css */
 
-.raised:hover,
-.fab:hover,
-.navMenuOption:hover,
 .listItem:not(.actionSheetMenuItem):hover,
 .css-17c09up:hover {
     background: rgb(var(--abyss-accent)) !important;

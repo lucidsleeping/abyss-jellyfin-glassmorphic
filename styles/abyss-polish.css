@@ -104,7 +104,7 @@
     left: auto !important;
 }
 
-/* One consistent glass knob — no heart glow / played pill mismatch */
+/* Card overlay buttons — sizing only; prism glass in abyss-liquid-glass-buttons.css */
 .cardOverlayButton-br .paper-icon-button-light,
 .cardOverlayButton-br .cardOverlayButtonIcon,
 .cardOverlayButton-br .emby-button {
@@ -118,13 +118,6 @@
     min-width: 2.15rem !important;
     min-height: 2.15rem !important;
     padding: 0 !important;
-    color: #fff !important;
-    background: rgba(12, 12, 16, 0.58) !important;
-    background-image: none !important;
-    border: 0.5px solid rgba(255, 255, 255, 0.22) !important;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35) !important;
-    -webkit-backdrop-filter: blur(12px) saturate(155%);
-    backdrop-filter: blur(12px) saturate(155%);
 }
 
 .cardOverlayButton-br .playstatebutton-icon-played::before {
@@ -142,8 +135,6 @@
 
 .cardOverlayButton-br .paper-icon-button-light:hover,
 .cardOverlayButton-br .cardOverlayButtonIcon:hover {
-    background: rgba(12, 12, 16, 0.78) !important;
-    color: rgb(var(--abyss-accent)) !important;
     transform: scale(1.04);
 }
 
@@ -163,18 +154,6 @@
 
 .sectionTitleTextButton:hover {
     color: rgb(var(--abyss-accent)) !important;
-}
-
-/* Home row headers: text links only — no glass pill / full-width seam */
-.sectionTitleTextButton.button-flat,
-.sectionTitleTextButton.button-flat-mini {
-    background: transparent !important;
-    background-image: none !important;
-    border: none !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
-    padding: 0.15em 0 !important;
-    border-radius: 0 !important;
 }
 
 #indexPage .homeSectionsContainer .sectionTitleContainer,
@@ -264,16 +243,8 @@
     box-shadow: none !important;
 }
 
-/*
- * Liquid-glass @supports block blurs .emby-tabs-slider + .paper-icon-button-light
- * globally — in the header that reads as a full-width frosted bar.
- */
-.skinHeader:not(.osdHeader) .emby-tabs-slider,
-.skinHeader:not(.osdHeader) .emby-tab-button,
-.skinHeader:not(.osdHeader) .emby-tab-button-active,
-.skinHeader:not(.osdHeader) .paper-icon-button-light,
-.skinHeader:not(.osdHeader) .headerUserButtonRound,
-.skinHeader:not(.osdHeader) .headerButton,
+/* Tab track only — individual tab/icon buttons keep prism glass */
+.skinHeader:not(.osdHeader) .headerTabs .emby-tabs-slider,
 .skinHeader:not(.osdHeader) .headerLeft,
 .skinHeader:not(.osdHeader) .headerRight {
     -webkit-backdrop-filter: none !important;
@@ -317,13 +288,6 @@
     min-height: 2.65rem !important;
     margin: 0 !important;
     border-radius: 50% !important;
-    color: #fff !important;
-    background: rgba(var(--abyss-glass-surface), 0.16) !important;
-    background-image: var(--abyss-glass-face) !important;
-    -webkit-backdrop-filter: var(--abyss-glass-filter-light);
-    backdrop-filter: var(--abyss-glass-filter-light);
-    border: 0.5px solid rgba(var(--abyss-glass-highlight), 0.38) !important;
-    box-shadow: var(--abyss-glass-shadow-knob), var(--abyss-glass-inset-soft) !important;
 }
 
 #videoOsdPage .osdHeader .headerBackButton:hover {

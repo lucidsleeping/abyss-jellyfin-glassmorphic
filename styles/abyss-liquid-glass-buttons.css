@@ -1,0 +1,406 @@
+/*
+ * Liquid Glass buttons — high refraction + prismatic rim (WWDC25 lensing)
+ * Loaded from abyss-liquid-glass.css
+ */
+
+:root {
+    --abyss-glass-refract-blur: 36px;
+    --abyss-glass-refract-saturate: 240%;
+    --abyss-glass-refract-brightness: 1.14;
+    --abyss-glass-filter-refract:
+        blur(var(--abyss-glass-refract-blur))
+        saturate(var(--abyss-glass-refract-saturate))
+        brightness(var(--abyss-glass-refract-brightness))
+        contrast(1.06);
+
+    --abyss-glass-prism-ring: linear-gradient(
+        128deg,
+        rgba(255, 75, 130, 0.72) 0%,
+        rgba(255, 200, 80, 0.55) 16%,
+        rgba(110, 255, 190, 0.5) 34%,
+        rgba(70, 150, 255, 0.68) 52%,
+        rgba(190, 95, 255, 0.58) 70%,
+        rgba(255, 120, 160, 0.65) 86%,
+        rgba(255, 75, 130, 0.72) 100%
+    );
+
+    --abyss-glass-prism-glow: conic-gradient(
+        from 200deg at 50% 50%,
+        rgba(255, 90, 140, 0.45),
+        rgba(255, 220, 100, 0.35),
+        rgba(100, 255, 210, 0.32),
+        rgba(80, 170, 255, 0.42),
+        rgba(200, 110, 255, 0.38),
+        rgba(255, 90, 140, 0.45)
+    );
+
+    --abyss-glass-chromatic-shadow:
+        -2px 0 14px rgba(255, 70, 120, 0.28),
+        2px 0 14px rgba(65, 155, 255, 0.28),
+        0 -1px 10px rgba(110, 255, 200, 0.16),
+        0 4px 16px rgba(0, 0, 0, 0.22);
+
+    --abyss-glass-btn-fill: 0.36;
+    --abyss-glass-btn-fill-hover: 0.48;
+}
+
+@keyframes abyss-prism-shimmer {
+    0% {
+        transform: rotate(0deg) scale(1.05);
+        opacity: 0.55;
+    }
+
+    50% {
+        opacity: 0.85;
+    }
+
+    100% {
+        transform: rotate(360deg) scale(1.05);
+        opacity: 0.55;
+    }
+}
+
+/* ── All interactive controls ── */
+
+.raised,
+.fab,
+.button-flat,
+.button-link,
+.button-submit,
+.button-flat-mini,
+.emby-button,
+a[data-role="button"],
+.paper-icon-button-light,
+.headerUserButtonRound,
+.headerButton,
+.headerBackButton,
+.emby-tab-button,
+.sectionTitleTextButton,
+.detailButton,
+.detailButton-content,
+.cardOverlayButton,
+.cardOverlayButtonIcon,
+.cardOverlayButton-br .paper-icon-button-light,
+.cardOverlayButton-br .cardOverlayButtonIcon,
+.cardOverlayButton-br .emby-button,
+.homeLibraryButton,
+.listItemImageButton,
+.listItemButton,
+.navMenuOption,
+.btnQuick,
+.btnForgotPassword,
+.textActionButton,
+.ratingbutton,
+.playstatebutton-icon,
+.mdl-switch__thumb,
+.selectionCommandsPanel .emby-button,
+.itemsViewSettingsContainer .button-flat,
+.sectionTitleButton,
+.sectionTitleIconButton,
+#videoOsdPage .osdHeader .headerBackButton {
+    position: relative !important;
+    isolation: isolate !important;
+    overflow: hidden !important;
+    border: 1px solid transparent !important;
+    background-color: rgba(var(--abyss-glass-tint), var(--abyss-glass-btn-fill)) !important;
+    background-image: var(--abyss-glass-face), var(--abyss-glass-prism-ring) !important;
+    background-origin: border-box !important;
+    background-clip: padding-box, border-box !important;
+    box-shadow: var(--abyss-glass-chromatic-shadow), var(--abyss-glass-inset-soft) !important;
+    color: rgba(255, 255, 255, 0.94) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+    transition:
+        background-color 0.35s var(--abyss-glass-ease-material),
+        box-shadow 0.35s var(--abyss-glass-ease-material),
+        transform 0.25s var(--abyss-glass-ease-material),
+        color 0.25s var(--abyss-glass-ease-material),
+        backdrop-filter 0.35s var(--abyss-glass-ease-material),
+        -webkit-backdrop-filter 0.35s var(--abyss-glass-ease-material) !important;
+}
+
+/* Prismatic halo (refraction spill) */
+.raised::before,
+.fab::before,
+.button-flat::before,
+.button-link::before,
+.button-submit::before,
+.emby-button::before,
+a[data-role="button"]::before,
+.paper-icon-button-light::before,
+.headerUserButtonRound::before,
+.headerButton::before,
+.headerBackButton::before,
+.emby-tab-button::before,
+.sectionTitleTextButton::before,
+.detailButton::before,
+.cardOverlayButton::before,
+.cardOverlayButtonIcon::before,
+.homeLibraryButton::before,
+.listItemImageButton::before,
+.listItemButton::before,
+.navMenuOption::before,
+.btnQuick::before,
+.mdl-switch__thumb::before {
+    content: "";
+    position: absolute;
+    inset: -40%;
+    border-radius: inherit;
+    background: var(--abyss-glass-prism-glow);
+    opacity: 0.42;
+    mix-blend-mode: screen;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(10px) saturate(180%);
+    animation: abyss-prism-shimmer 14s linear infinite;
+}
+
+.raised > *,
+.fab > *,
+.button-flat > *,
+.emby-button > *,
+a[data-role="button"] > *,
+.paper-icon-button-light > *,
+.emby-tab-button > *,
+.sectionTitleTextButton > *,
+.detailButton > *,
+.navMenuOption > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Specular lensing highlight */
+.raised::after,
+.fab::after,
+.button-flat::after,
+.emby-button::after,
+a[data-role="button"]::after,
+.paper-icon-button-light::after,
+.emby-tab-button::after,
+.sectionTitleTextButton::after,
+.detailButton::after,
+.cardOverlayButton::after,
+.cardOverlayButtonIcon::after,
+.homeLibraryButton::after,
+.navMenuOption::after,
+.button-submit::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 1;
+    background: var(--abyss-glass-specular);
+    opacity: 0.75;
+    mix-blend-mode: soft-light;
+}
+
+/* Hover — stronger refraction */
+.raised:hover:not(:disabled),
+.fab:hover:not(:disabled),
+.button-flat:hover:not(:disabled),
+.button-link:hover:not(:disabled),
+.emby-button:hover:not(:disabled),
+a[data-role="button"]:hover:not(:disabled),
+.paper-icon-button-light:hover:not(:disabled),
+.headerButton:hover:not(:disabled),
+.emby-tab-button:hover:not(.emby-tab-button-active):not(:disabled),
+.sectionTitleTextButton:hover,
+.detailButton:hover,
+.cardOverlayButton:hover,
+.cardOverlayButtonIcon:hover,
+.homeLibraryButton:hover,
+.navMenuOption:hover,
+.listItemImageButton:hover,
+.btnQuick:hover {
+    background-color: rgba(var(--abyss-glass-tint), var(--abyss-glass-btn-fill-hover)) !important;
+    box-shadow:
+        -3px 0 18px rgba(255, 70, 120, 0.35),
+        3px 0 18px rgba(65, 155, 255, 0.35),
+        0 0 22px rgba(180, 120, 255, 0.22),
+        var(--abyss-glass-shadow-knob),
+        var(--abyss-glass-inset) !important;
+    color: rgb(var(--abyss-accent)) !important;
+}
+
+/* Active — energize (WWDC touch feedback) */
+.raised:active:not(:disabled),
+.fab:active:not(:disabled),
+.button-flat:active:not(:disabled),
+.emby-button:active:not(:disabled),
+a[data-role="button"]:active:not(:disabled),
+.paper-icon-button-light:active:not(:disabled),
+.emby-tab-button:active,
+.sectionTitleTextButton:active,
+.detailButton:active,
+.cardOverlayButton:active,
+.cardOverlayButtonIcon:active,
+.homeLibraryButton:active,
+.navMenuOption:active {
+    transform: scale(0.97) !important;
+    box-shadow:
+        -1px 0 20px rgba(255, 100, 180, 0.45),
+        1px 0 20px rgba(80, 180, 255, 0.45),
+        0 0 28px rgba(255, 255, 255, 0.18),
+        var(--abyss-glass-inset) !important;
+}
+
+/* Active tab — lifted glass pill */
+.emby-tab-button-active,
+div[data-role="controlgroup"] a.ui-btn-active {
+    background-color: rgba(var(--abyss-glass-surface), var(--abyss-glass-surface-elevated)) !important;
+    background-image: var(--abyss-glass-face-strong), var(--abyss-glass-prism-ring) !important;
+    color: #121212 !important;
+    font-weight: 600 !important;
+    box-shadow:
+        -2px 0 16px rgba(255, 90, 150, 0.32),
+        2px 0 16px rgba(90, 170, 255, 0.32),
+        var(--abyss-glass-shadow-knob),
+        var(--abyss-glass-inset) !important;
+}
+
+.emby-tab-button-active::before,
+div[data-role="controlgroup"] a.ui-btn-active::before {
+    opacity: 0.65;
+    animation-duration: 8s;
+}
+
+/* Primary submit — tinted glass */
+.button-submit:not(:hover) {
+    background-color: rgba(var(--abyss-glass-tint-accent), var(--abyss-glass-tint-fill)) !important;
+    background-image:
+        linear-gradient(
+            165deg,
+            rgba(var(--abyss-glass-highlight), 0.32) 0%,
+            rgba(var(--abyss-glass-tint-accent), 0.4) 100%
+        ),
+        var(--abyss-glass-prism-ring) !important;
+    color: #121212 !important;
+    font-weight: 600 !important;
+}
+
+/* Segmented track (buttons sit inside) */
+div[data-role="controlgroup"] a[data-role="button"]:not(.ui-btn-active) {
+    background-color: transparent !important;
+    background-image: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+
+div[data-role="controlgroup"] a[data-role="button"]:not(.ui-btn-active)::before,
+div[data-role="controlgroup"] a[data-role="button"]:not(.ui-btn-active)::after {
+    display: none !important;
+}
+
+/* Section title pills — compact glass */
+.sectionTitleTextButton {
+    padding: 0.42em 0.85em !important;
+    border-radius: var(--abyss-radius-pill) !important;
+    gap: 0.35em;
+}
+
+.sectionTitleTextButton > .sectionTitle {
+    margin: 0 !important;
+    text-shadow: none !important;
+}
+
+/* Icon-only circles */
+.paper-icon-button-light,
+.headerUserButtonRound,
+.cardOverlayButtonIcon,
+.listItemImageButton {
+    border-radius: 50% !important;
+}
+
+/* Slider / switch thumbs */
+.mdl-slider::-webkit-slider-thumb,
+.mdl-slider::-moz-range-thumb,
+.mdl-slider::-ms-thumb {
+    background-color: rgba(var(--abyss-glass-surface), 0.95) !important;
+    background-image: var(--abyss-glass-face), var(--abyss-glass-prism-ring) !important;
+    background-origin: border-box !important;
+    background-clip: padding-box, border-box !important;
+    box-shadow: var(--abyss-glass-chromatic-shadow), var(--abyss-glass-inset) !important;
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+
+    .raised,
+    .fab,
+    .button-flat,
+    .button-link,
+    .button-submit,
+    .emby-button,
+    a[data-role="button"],
+    .paper-icon-button-light,
+    .headerUserButtonRound,
+    .headerButton,
+    .headerBackButton,
+    .emby-tab-button,
+    .sectionTitleTextButton,
+    .detailButton,
+    .cardOverlayButton,
+    .cardOverlayButtonIcon,
+    .homeLibraryButton,
+    .listItemImageButton,
+    .listItemButton,
+    .navMenuOption,
+    .btnQuick,
+    .mdl-switch__thumb,
+    .mdl-slider::-webkit-slider-thumb,
+    .mdl-slider::-moz-range-thumb {
+        -webkit-backdrop-filter: var(--abyss-glass-filter-refract) !important;
+        backdrop-filter: var(--abyss-glass-filter-refract) !important;
+    }
+
+    .emby-tab-button-active,
+    div[data-role="controlgroup"] a.ui-btn-active {
+        -webkit-backdrop-filter: var(--abyss-glass-filter-refract) !important;
+        backdrop-filter: var(--abyss-glass-filter-refract) !important;
+    }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+
+    .raised::before,
+    .fab::before,
+    .button-flat::before,
+    .emby-button::before,
+    a[data-role="button"]::before,
+    .paper-icon-button-light::before,
+    .emby-tab-button::before,
+    .sectionTitleTextButton::before,
+    .navMenuOption::before {
+        animation: none !important;
+        opacity: 0.2 !important;
+    }
+
+    .raised,
+    .fab,
+    .button-flat,
+    .emby-button,
+    a[data-role="button"],
+    .paper-icon-button-light,
+    .emby-tab-button,
+    .sectionTitleTextButton,
+    .navMenuOption {
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+        background-color: rgba(var(--abyss-glass-tint), 0.88) !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .raised::before,
+    .fab::before,
+    .button-flat::before,
+    .emby-button::before,
+    a[data-role="button"]::before,
+    .paper-icon-button-light::before,
+    .emby-tab-button::before,
+    .sectionTitleTextButton::before,
+    .navMenuOption::before,
+    .button-submit::before {
+        animation: none !important;
+    }
+}

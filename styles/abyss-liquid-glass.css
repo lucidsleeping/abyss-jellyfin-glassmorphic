@@ -194,20 +194,9 @@
     backdrop-filter: none !important;
 }
 
-/* Primary action tint */
-.button-submit:not(:hover) {
-    background: rgba(var(--abyss-glass-tint-accent), var(--abyss-glass-tint-fill)) !important;
-    background-image: linear-gradient(
-        165deg,
-        rgba(var(--abyss-glass-highlight), 0.28) 0%,
-        rgba(var(--abyss-glass-tint-accent), 0.35) 100%
-    ) !important;
-    border: 0.5px solid rgba(var(--abyss-glass-highlight), 0.45) !important;
-    color: #121212 !important;
-    font-weight: 600 !important;
-    text-shadow: none !important;
-    box-shadow: var(--abyss-glass-shadow-knob), var(--abyss-glass-inset-soft) !important;
-}
+/* Buttons: prism glass — styles/abyss-liquid-glass-buttons.css */
+
+@import url('./abyss-liquid-glass-buttons.css');
 
 @media (prefers-reduced-transparency: reduce) {
     :root {
@@ -305,31 +294,7 @@ div[data-role="controlgroup"] a[data-role="button"]:not(.ui-btn-active) {
 
 /* Header Home/Favorites — see block below (no track bar / ghost rims) */
 
-.emby-tab-button {
-    background: transparent !important;
-    color: var(--abyss-glass-text-muted) !important;
-    font-weight: 500 !important;
-    border: 0.5px solid transparent !important;
-    box-shadow: none !important;
-}
-
-.emby-tab-button:hover:not(.emby-tab-button-active) {
-    color: rgba(255, 255, 255, 0.78) !important;
-    background: rgba(var(--abyss-glass-surface), 0.08) !important;
-}
-
-.emby-tab-button-active {
-    background: rgba(var(--abyss-glass-surface), var(--abyss-glass-surface-elevated)) !important;
-    color: #121212 !important;
-    font-weight: 600 !important;
-    border: 0.5px solid rgba(var(--abyss-glass-highlight), 0.55) !important;
-    box-shadow: var(--abyss-glass-shadow-knob), var(--abyss-glass-inset) !important;
-}
-
-.emby-tab-button-active:hover {
-    color: #121212 !important;
-    background: rgba(var(--abyss-glass-surface), 0.95) !important;
-}
+/* Tab prism glass — abyss-liquid-glass-buttons.css */
 
 /* ── Header Home/Favorites: no outer track bar, no stacked ghost rims ── */
 
@@ -362,72 +327,12 @@ div[data-role="controlgroup"] a[data-role="button"]:not(.ui-btn-active) {
 }
 
 .skinHeader:not(.osdHeader) .headerTabs .emby-tab-button {
-    border: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
-    color: rgba(255, 255, 255, 0.55) !important;
     padding: 0.5em 1.35em !important;
-    border-radius: var(--abyss-radius-pill) !important;
-}
-
-.skinHeader:not(.osdHeader) .headerTabs .emby-tab-button:hover:not(.emby-tab-button-active) {
-    color: rgba(255, 255, 255, 0.88) !important;
-    background: rgba(255, 255, 255, 0.1) !important;
-    border: none !important;
-    box-shadow: none !important;
+    color: rgba(255, 255, 255, 0.72) !important;
 }
 
 .skinHeader:not(.osdHeader) .headerTabs .emby-tab-button-active {
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-    background: rgba(255, 255, 255, 0.93) !important;
     color: #121212 !important;
-    border: none !important;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.22) !important;
-}
-
-.skinHeader:not(.osdHeader) .headerTabs .emby-tab-button-active:hover {
-    color: #121212 !important;
-    background: rgba(255, 255, 255, 0.97) !important;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.22) !important;
-}
-
-/* ── Glass capsule buttons (reference: Toggle, Hello World) ── */
-
-.raised:not(.homeLibraryButton):not(:hover),
-.fab:not(:hover),
-a[data-role="button"]:not(:hover),
-.button-flat:not(:hover):not(.sectionTitleTextButton) {
-    background: rgba(var(--abyss-glass-tint), var(--abyss-glass-capsule-fill)) !important;
-    border: 0.5px solid rgba(var(--abyss-glass-highlight), var(--abyss-glass-border-subtle)) !important;
-    box-shadow: var(--abyss-glass-shadow-knob), var(--abyss-glass-inset-soft) !important;
-    color: rgba(255, 255, 255, 0.92) !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-}
-
-/* ── Circular glass icon buttons (reference: edit circle) ── */
-
-.paper-icon-button-light,
-.headerUserButtonRound {
-    background: rgba(var(--abyss-glass-surface), var(--abyss-glass-surface-fill)) !important;
-    border: 0.5px solid rgba(var(--abyss-glass-highlight), var(--abyss-glass-border-alpha)) !important;
-    box-shadow: var(--abyss-glass-shadow-knob), var(--abyss-glass-inset) !important;
-}
-
-.paper-icon-button-light:hover:not(:disabled) {
-    background: rgba(var(--abyss-glass-surface), 0.24) !important;
-    color: rgb(var(--abyss-accent)) !important;
-}
-
-/* Interaction: illuminate from touch (WWDC material feedback) */
-.paper-icon-button-light:active:not(:disabled),
-.emby-tab-button:active,
-.button-flat:active:not(.sectionTitleTextButton),
-.raised:active:not(.homeLibraryButton) {
-    box-shadow:
-        var(--abyss-glass-shadow-knob),
-        var(--abyss-glass-inset-soft),
-        0 0 14px rgba(var(--abyss-glass-highlight), 0.2) !important;
 }
 
 /* ── Slider (reference: blue track + glass thumb) ── */
@@ -508,32 +413,16 @@ a[data-role="button"]:not(:hover),
         backdrop-filter: var(--abyss-glass-filter-heavy) !important;
     }
 
-    .emby-tabs-slider,
-    .paper-icon-button-light,
-    .headerUserButtonRound,
-    .raised:not(.homeLibraryButton):not(:hover):not(.button-submit),
-    .fab:not(:hover),
-    a[data-role="button"]:not(:hover),
-    .button-flat:not(:hover):not(.sectionTitleTextButton) {
+    .emby-tabs-slider {
         -webkit-backdrop-filter: var(--abyss-glass-filter-light) !important;
         backdrop-filter: var(--abyss-glass-filter-light) !important;
     }
 
-    .skinHeader:not(.osdHeader) .emby-tabs-slider,
-    .skinHeader:not(.osdHeader) .paper-icon-button-light,
-    .skinHeader:not(.osdHeader) .headerUserButtonRound,
-    .skinHeader:not(.osdHeader) .emby-tab-button-active {
+    .skinHeader:not(.osdHeader) .emby-tabs-slider {
         -webkit-backdrop-filter: none !important;
         backdrop-filter: none !important;
     }
 
-    .button-submit:not(:hover) {
-        -webkit-backdrop-filter: var(--abyss-glass-filter-light) !important;
-        backdrop-filter: var(--abyss-glass-filter-light) !important;
-    }
-
-    .mdl-slider::-webkit-slider-thumb,
-    .mdl-slider::-moz-range-thumb,
     .iconOsd {
         -webkit-backdrop-filter: var(--abyss-glass-filter-light);
         backdrop-filter: var(--abyss-glass-filter-light);
