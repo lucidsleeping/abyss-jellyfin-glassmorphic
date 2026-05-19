@@ -323,14 +323,27 @@ a[data-role="button"]:not(:hover),
         background-color: rgba(var(--abyss-glass-tint), var(--abyss-glass-fill-elevated)) !important;
     }
 
-    .emby-tabs-slider,
     .selectionCommandsPanel,
     .actionSheetContent,
-    .iconOsd,
+    .iconOsd {
+        -webkit-backdrop-filter: var(--abyss-glass-filter-light) !important;
+        backdrop-filter: var(--abyss-glass-filter-light) !important;
+    }
+
+    /* Tabs/buttons — blur everywhere except main header (see abyss-polish.css) */
+    .emby-tabs-slider,
     .paper-icon-button-light,
     .headerUserButtonRound {
         -webkit-backdrop-filter: var(--abyss-glass-filter-light) !important;
         backdrop-filter: var(--abyss-glass-filter-light) !important;
+    }
+
+    .skinHeader:not(.osdHeader) .emby-tabs-slider,
+    .skinHeader:not(.osdHeader) .paper-icon-button-light,
+    .skinHeader:not(.osdHeader) .headerUserButtonRound,
+    .skinHeader:not(.osdHeader) .emby-tab-button-active {
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
     }
 
     .headerTabs.sectionTabs:not(:has(.emby-tabs-slider)) {
@@ -338,9 +351,19 @@ a[data-role="button"]:not(:hover),
         backdrop-filter: var(--abyss-glass-filter-light) !important;
     }
 
+    .skinHeader .headerTabs.sectionTabs:not(:has(.emby-tabs-slider)) {
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+    }
+
     .emby-tab-button-active {
         -webkit-backdrop-filter: var(--abyss-glass-filter-light) !important;
         backdrop-filter: var(--abyss-glass-filter-light) !important;
+    }
+
+    .skinHeader:not(.osdHeader) .emby-tab-button-active {
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
     }
 
     .raised:not(.homeLibraryButton):not(:hover),

@@ -126,12 +126,36 @@
 
 /* Override Jellyfin Dark theme: .semiTransparent gradient + .withBackground #202020 bar */
 .skinHeader.semiTransparent,
-.skinHeader-withBackground:not(.osdHeader) {
+.skinHeader-withBackground:not(.osdHeader),
+.skinHeader:not(.osdHeader) .headerTop {
     background: none !important;
     background-color: transparent !important;
     background-image: none !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+}
+
+/*
+ * Liquid-glass @supports block blurs .emby-tabs-slider + .paper-icon-button-light
+ * globally — in the header that reads as a full-width frosted bar.
+ */
+.skinHeader:not(.osdHeader) .emby-tabs-slider,
+.skinHeader:not(.osdHeader) .emby-tab-button,
+.skinHeader:not(.osdHeader) .emby-tab-button-active,
+.skinHeader:not(.osdHeader) .paper-icon-button-light,
+.skinHeader:not(.osdHeader) .headerUserButtonRound,
+.skinHeader:not(.osdHeader) .headerButton,
+.skinHeader:not(.osdHeader) .headerTabs,
+.skinHeader:not(.osdHeader) .headerLeft,
+.skinHeader:not(.osdHeader) .headerRight {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+}
+
+/* Tab pill: solid glass tint, no backdrop blur */
+.skinHeader:not(.osdHeader) .headerTabs .emby-tabs-slider {
+    background-color: rgba(var(--abyss-glass-surface), 0.38) !important;
 }
 
 /* ── 5. Video player: restore back button ── */
