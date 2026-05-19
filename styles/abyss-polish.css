@@ -124,10 +124,14 @@
     -webkit-mask-image: none !important;
 }
 
+/* Override Jellyfin Dark theme: .semiTransparent gradient + .withBackground #202020 bar */
+.skinHeader.semiTransparent,
 .skinHeader-withBackground:not(.osdHeader) {
+    background: none !important;
+    background-color: transparent !important;
+    background-image: none !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-    background: transparent !important;
 }
 
 /* ── 5. Video player: restore back button ── */

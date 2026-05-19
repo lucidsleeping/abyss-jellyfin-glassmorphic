@@ -337,7 +337,9 @@ input[type="radio"]:checked {
 }
 
 .skinHeader.semiTransparent {
-    background-color: transparent;
+    background: none !important;
+    background-color: transparent !important;
+    background-image: none !important;
 }
 
 /* skinHeader-withBackground blur bar — disabled in styles/abyss-polish.css */
