@@ -13,6 +13,7 @@
 #   JELLYFIN_URL        e.g. http://127.0.0.1:8096 — apply Custom CSS via API
 #   ABYSS_ADMIN_USER    Admin username (with JELLYFIN_URL)
 #   ABYSS_ADMIN_PASSWORD Admin password
+#   ABYSS_CSS_CDN=1     Theme from jsDelivr only — skip /web/abyss/ install (Spotlight/touch still local)
 
 set -euo pipefail
 
@@ -73,13 +74,29 @@ fetch_file() {
     exit 1
 }
 
+cdn_custom_css() {
+    printf "@import url('https://cdn.jsdelivr.net/gh/%s@%s/abyss.css');\n@import url('https://cdn.jsdelivr.net/gh/%s@%s/styles/abyss-polish.css');" \
+        "$REPO" "$BRANCH" "$REPO" "$BRANCH"
+}
+
+remove_local_theme_css() {
+    if [[ -d "$ABYSS_DIR" ]]; then
+        rm -rf "$ABYSS_DIR"
+        log "Removed local theme: ${ABYSS_DIR} (using Custom CSS from jsDelivr)"
+    fi
+}
+
 stage_all_files() {
     mkdir -p "$STAGE_DIR/styles"
     local f
-    for f in "${THEME_FILES[@]}"; do
-        fetch_file "$f" "${STAGE_DIR}/${f}" || exit 1
-        log "Staged: ${f}"
-    done
+    if [[ "${ABYSS_CSS_CDN:-0}" != "1" ]]; then
+        for f in "${THEME_FILES[@]}"; do
+            fetch_file "$f" "${STAGE_DIR}/${f}" || exit 1
+            log "Staged: ${f}"
+        done
+    else
+        log "ABYSS_CSS_CDN=1 — skipping theme file download"
+    fi
     for f in "${SPOTLIGHT_FILES[@]}"; do
         if [[ "$f" == "scripts/spotlight/abyss-spotlight-inject.js" ]]; then
             fetch_file "$f" "${STAGE_DIR}/abyss-spotlight-inject.js" 1 \
@@ -246,8 +263,12 @@ PY
         log "Custom CSS applied via API"
     else
         log "WARNING: Could not apply Custom CSS via API (check ABYSS_ADMIN_USER / ABYSS_ADMIN_PASSWORD)"
-        log "Add manually in Dashboard > General > Custom CSS:"
-        log "  @import url('/web/abyss/abyss-bundle.css');"
+        if [[ "${ABYSS_CSS_CDN:-0}" == "1" ]]; then
+            log "Add manually in Dashboard > General > Custom CSS:"
+            cdn_custom_css | while IFS= read -r line; do log "  $line"; done
+        else
+            log "  @import url('/web/abyss/abyss-bundle.css');"
+        fi
     fi
 }
 
@@ -273,17 +294,32 @@ else
 fi
 
 stage_all_files
-install_theme_css
+
+if [[ "${ABYSS_CSS_CDN:-0}" == "1" ]]; then
+    remove_local_theme_css
+else
+    install_theme_css
+fi
+
 install_spotlight
 install_touch
 link_ui_scripts
 
 export JELLYFIN_URL="${JELLYFIN_URL:-http://127.0.0.1:8096}"
-export ABYSS_CSS="@import url('/web/abyss/abyss-bundle.css');"
+if [[ "${ABYSS_CSS_CDN:-0}" == "1" ]]; then
+    export ABYSS_CSS="$(cdn_custom_css)"
+else
+    export ABYSS_CSS="@import url('/web/abyss/abyss-bundle.css');"
+fi
 apply_custom_css_api
 
-log "Done. Theme: ${ABYSS_DIR}/"
-log "Verify: ${JELLYFIN_URL:-http://127.0.0.1:8096}/web/abyss/styles/abyss-layout.css"
+if [[ "${ABYSS_CSS_CDN:-0}" == "1" ]]; then
+    log "Done. Theme CSS: jsDelivr (${REPO}@${BRANCH})"
+    log "Verify: https://cdn.jsdelivr.net/gh/${REPO}@${BRANCH}/styles/abyss-polish.css"
+else
+    log "Done. Theme: ${ABYSS_DIR}/"
+    log "Verify: ${JELLYFIN_URL:-http://127.0.0.1:8096}/web/abyss/styles/abyss-layout.css"
+fi
 log "Spotlight: /web/ui/spotlight.html (home page)"
 if [[ -z "${ABYSS_ADMIN_USER:-}" ]]; then
     log "Tip: set ABYSS_ADMIN_USER + ABYSS_ADMIN_PASSWORD to auto-apply Custom CSS"
