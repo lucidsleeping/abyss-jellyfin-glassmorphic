@@ -169,6 +169,48 @@
     color: rgb(var(--abyss-accent)) !important;
 }
 
+/* Home row headers: text links only — no glass pill / full-width seam */
+.sectionTitleTextButton.button-flat,
+.sectionTitleTextButton.button-flat-mini {
+    background: transparent !important;
+    background-image: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    padding: 0.15em 0 !important;
+    border-radius: 0 !important;
+}
+
+#indexPage .homeSectionsContainer .sectionTitleContainer,
+#homeTab .homeSectionsContainer .sectionTitleContainer {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+
+/* My Media library row: drop default card shadow band above next section */
+.homeSectionsContainer .sectionTitle-cards ~ .emby-scroller .visualCardBox,
+.homeSectionsContainer .sectionTitle-cards ~ .emby-scroller .cardBox {
+    box-shadow: none !important;
+}
+
+#indexPage .homeSectionsContainer .emby-scroller,
+#homeTab .homeSectionsContainer .emby-scroller {
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.homeSectionsContainer > .verticalSection + .verticalSection {
+    border-top: none !important;
+    box-shadow: none !important;
+}
+
+.homeSectionsContainer > .verticalSection + .verticalSection > .verticalSection:first-child .sectionTitleContainer {
+    margin-top: 0.5em;
+    padding-top: 0.25em;
+}
+
 .emby-tab-button {
     padding: 0.55em 1.4em !important;
     min-width: 5.25em;
