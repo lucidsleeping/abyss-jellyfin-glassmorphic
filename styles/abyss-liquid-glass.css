@@ -126,10 +126,25 @@
 /* ── Pill toolbar (reference: horizontal frosted bar) ── */
 
 .emby-tabs-slider,
-.headerTabs.sectionTabs,
 .selectionCommandsPanel,
 .actionSheetContent,
 .iconOsd {
+    border-radius: var(--abyss-radius-pill) !important;
+    border: 0.5px solid rgba(var(--abyss-glass-highlight), var(--abyss-glass-border-alpha)) !important;
+    box-shadow: var(--abyss-glass-shadow-float), var(--abyss-glass-inset) !important;
+    background-color: rgba(var(--abyss-glass-surface), var(--abyss-glass-surface-fill)) !important;
+}
+
+/* Home/Favorites: wrapper + slider were both glass — caused a ghost rim above the pill */
+.headerTabs.sectionTabs:has(.emby-tabs-slider) {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+}
+
+.headerTabs.sectionTabs:not(:has(.emby-tabs-slider)) {
     border-radius: var(--abyss-radius-pill) !important;
     border: 0.5px solid rgba(var(--abyss-glass-highlight), var(--abyss-glass-border-alpha)) !important;
     box-shadow: var(--abyss-glass-shadow-float), var(--abyss-glass-inset) !important;
@@ -163,6 +178,7 @@ div[data-role="controlgroup"] a[data-role="button"]:not(.ui-btn-active) {
     padding: 4px !important;
     background-color: rgba(var(--abyss-glass-surface), var(--abyss-glass-track-fill)) !important;
     border-color: rgba(var(--abyss-glass-highlight), var(--abyss-glass-border-subtle)) !important;
+    isolation: isolate;
 }
 
 .emby-tab-button {
@@ -295,12 +311,16 @@ a[data-role="button"]:not(:hover),
     }
 
     .emby-tabs-slider,
-    .headerTabs.sectionTabs,
     .selectionCommandsPanel,
     .actionSheetContent,
     .iconOsd,
     .paper-icon-button-light,
     .headerUserButtonRound {
+        -webkit-backdrop-filter: var(--abyss-glass-filter-light) !important;
+        backdrop-filter: var(--abyss-glass-filter-light) !important;
+    }
+
+    .headerTabs.sectionTabs:not(:has(.emby-tabs-slider)) {
         -webkit-backdrop-filter: var(--abyss-glass-filter-light) !important;
         backdrop-filter: var(--abyss-glass-filter-light) !important;
     }

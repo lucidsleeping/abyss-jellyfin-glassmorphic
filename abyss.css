@@ -5,6 +5,7 @@
 @import url('./styles/abyss-liquid-glass.css');
 @import url('./styles/abyss-player.css');
 @import url('./styles/abyss-touch.css');
+@import url('./styles/abyss-layout.css');
 
 @font-face {
     font-family: 'Material Icons Round';
@@ -205,10 +206,8 @@ input[type="radio"]:checked {
     text-size-adjust: 110%;
     font-size: 110%;
     padding-top: 8px;
-    margin-top: -2em;
     width: fit-content;
     align-self: center !important;
-    border-radius: 50px;
 }
 
 .pageTitle {
@@ -327,15 +326,11 @@ input[type="radio"]:checked {
 
 /* 5. LAYOUT & STRUCTURE */
 
-/* Header */
-.headerTop {
-    padding: 2em 0 !important;
-}
+/* Header — headerTop padding: styles/abyss-layout.css */
 
 .skinHeader {
     background-color: transparent;
     display: flex !important;
-    justify-items: center !important;
     align-self: center !important;
     justify-content: center !important;
 }
@@ -356,11 +351,7 @@ input[type="radio"]:checked {
     z-index: 1;
 }
 
-.headerLeft,
-.headerRight {
-    padding: 0 31px;
-    align-items: center;
-}
+/* headerLeft / headerRight padding — styles/abyss-layout.css */
 
 .headerUserButtonRound {
     border-radius: 50px !important;
@@ -391,13 +382,10 @@ body:has(#itemDetailPage) .backdropImage {
 .editPageSidebar,
 .mainDrawer {
     background-color: rgba(var(--abyss-glass-tint), var(--abyss-glass-fill-elevated));
-    margin: 24px 0;
     border-radius: var(--abyss-radius-float);
 }
 
-.mainDrawer.drawer-open {
-    margin: 24px;
-}
+/* mainDrawer margins — styles/abyss-layout.css */
 
 .sidebarHeader {
     margin: 0.9em 0 0.2em;
@@ -410,12 +398,14 @@ body:has(#itemDetailPage) .backdropImage {
     padding-left: 0.8em;
 }
 
-.emby-tabs {
-    border-radius: 50px;
-}
-
 .emby-tabs-slider {
     width: fit-content;
+}
+
+/* Pill radius lives on .emby-tabs-slider (liquid-glass); outer .emby-tabs is layout-only */
+.headerTabs.sectionTabs.emby-tabs:has(.emby-tabs-slider) {
+    border-radius: 0 !important;
+    background: transparent !important;
 }
 
 .navMenuOptionText {
@@ -449,14 +439,11 @@ body:has(#itemDetailPage) .backdropImage {
     border-radius: 12px !important;
 }
 
-.scrollContainer {
-    padding: 36px 12px 0 12px;
-}
+/* scrollContainer gutters — styles/abyss-layout.css */
 
 /* Footer */
 .appfooter {
     background: rgba(var(--abyss-glass-tint), var(--abyss-glass-fill-elevated));
-    margin: 24px;
     border-radius: var(--abyss-radius-lg);
 }
 
@@ -530,13 +517,7 @@ body:has(#itemDetailPage) .backdropImage {
     display: none !important;
 }
 
-.homeSectionsContainer {
-    padding: 0 7px !important;
-}
-
-#indexPage:has(.featurediframe) #favoritesTab {
-    margin-top: 7.5rem !important;
-}
+/* homeSectionsContainer / favoritesTab spacing — styles/abyss-layout.css */
 
 
 
@@ -1700,9 +1681,7 @@ div[data-role="controlgroup"] a[data-role="button"]:last-child {
     border-bottom: none;
 }
 
-.layout-mobile .itemBackdrop {
-    margin-top: 4rem;
-}
+/* layout-mobile itemBackdrop — styles/abyss-layout.css */
 
 .layout-mobile .detailLogo {
     display: none !important;
@@ -1716,9 +1695,7 @@ div[data-role="controlgroup"] a[data-role="button"]:last-child {
     background: rgba(0, 0, 0, 0);
 }
 
-.layout-mobile .sectionTitle {
-    padding-top: 0em;
-}
+/* layout-mobile sectionTitle — styles/abyss-layout.css */
 
 .layout-mobile #itemDetailPage .itemName.infoText.parentNameLast {
     display: block;
@@ -1738,11 +1715,6 @@ div[data-role="controlgroup"] a[data-role="button"]:last-child {
     padding-top: 0em;
 }
 
-.withSectionTabs .headerTop {
-    width: 100% !important;
-    align-self: center !important;
-}
-
 @media (max-width: 100em) {
     .withSectionTabs .headerTop {
         padding-bottom: 0;
@@ -1760,10 +1732,6 @@ div[data-role="controlgroup"] a[data-role="button"]:last-child {
 
     .cardOverlayContainer {
         background-color: rgba(0, 0, 0, 0.7);
-    }
-
-    .headerTabs.sectionTabs {
-        margin-top: -4.9em !important;
     }
 }
 
@@ -1799,11 +1767,6 @@ div[data-role="controlgroup"] a[data-role="button"]:last-child {
     .sectionTitle {
         font-size: 1.2em;
         font-weight: 500;
-    }
-
-    .headerLeft,
-    .headerRight {
-        padding: 0 12px;
     }
 
     .detailImageContainer .cardImageContainer,
@@ -1888,11 +1851,7 @@ div[data-role="controlgroup"] a[data-role="button"]:last-child {
     }
 }
 
-/* Item container margins */
-.itemsContainer>.card>.cardBox {
-    margin-left: 0.6em !important;
-    margin-right: 0.8em;
-}
+/* Item container margins — styles/abyss-layout.css */
 
 /* Episode list image sizing */
 .listItemImage.listItemImage-large.itemAction.lazy {
@@ -1981,7 +1940,6 @@ div[data-role="controlgroup"] a[data-role="button"]:last-child {
 @media all and (max-width: 50em) {
     .searchSuggestionsList {
         min-width: calc(100vw - 80px);
-        padding-left: 44px;
     }
 }
 

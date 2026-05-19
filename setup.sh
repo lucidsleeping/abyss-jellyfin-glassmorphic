@@ -27,6 +27,7 @@ THEME_FILES=(
     "styles/abyss-liquid-glass.css"
     "styles/abyss-player.css"
     "styles/abyss-touch.css"
+    "styles/abyss-layout.css"
     "styles/abyss-je.css"
     "styles/abyss-mbe.css"
 )
@@ -40,6 +41,7 @@ REQUIRED_THEME_FILES=(
     "styles/abyss-liquid-glass.css"
     "styles/abyss-player.css"
     "styles/abyss-touch.css"
+    "styles/abyss-layout.css"
 )
 
 # Detect OS once at startup

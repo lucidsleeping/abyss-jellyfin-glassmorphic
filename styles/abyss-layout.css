@@ -1,0 +1,329 @@
+/* Abyss — cross-viewport alignment (desktop, mobile, TV) */
+
+:root {
+    --abyss-gutter: 12px;
+    --abyss-gutter-lg: 24px;
+    --abyss-header-pad: 16px;
+    --abyss-safe-top: env(safe-area-inset-top, 0px);
+    --abyss-safe-bottom: env(safe-area-inset-bottom, 0px);
+    --abyss-safe-left: env(safe-area-inset-left, 0px);
+    --abyss-safe-right: env(safe-area-inset-right, 0px);
+}
+
+.layout-desktop {
+    --abyss-gutter: 12px;
+    --abyss-gutter-lg: 24px;
+    --abyss-header-pad: 31px;
+}
+
+.layout-mobile {
+    --abyss-gutter: 10px;
+    --abyss-gutter-lg: 12px;
+    --abyss-header-pad: 12px;
+}
+
+.layout-tv {
+    --abyss-gutter: 20px;
+    --abyss-gutter-lg: 28px;
+    --abyss-header-pad: 40px;
+}
+
+/* ── Header chrome ── */
+
+.skinHeader {
+    align-items: center !important;
+    width: 100%;
+}
+
+.headerTop {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+    padding-top: max(1.25em, calc(0.75em + var(--abyss-safe-top))) !important;
+    padding-bottom: 0.65em !important;
+    padding-left: max(var(--abyss-safe-left), 0px);
+    padding-right: max(var(--abyss-safe-right), 0px);
+}
+
+.layout-desktop .headerTop {
+    padding-top: max(1.75em, calc(1em + var(--abyss-safe-top))) !important;
+    padding-bottom: 0.85em !important;
+}
+
+.headerLeft,
+.headerRight {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    padding-left: max(var(--abyss-header-pad), var(--abyss-safe-left)) !important;
+    padding-right: max(var(--abyss-header-pad), var(--abyss-safe-right)) !important;
+}
+
+.withSectionTabs .headerTop {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.35em;
+}
+
+.withSectionTabs .headerLeft,
+.withSectionTabs .headerRight {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.headerTabs.sectionTabs {
+    margin-top: -1.5em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.emby-tabs-slider {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media all and (min-width: 50em) and (max-width: 74.99em) {
+    .headerTabs.sectionTabs {
+        margin-top: -2em;
+    }
+}
+
+@media all and (min-width: 75em) {
+    .headerTabs.sectionTabs {
+        margin-top: -4.9em !important;
+    }
+}
+
+.layout-mobile .headerTabs.sectionTabs {
+    margin-top: -0.35em;
+    padding-top: 4px;
+}
+
+.layout-tv .headerTabs.sectionTabs {
+    margin-top: -1.25em;
+    font-size: 115%;
+}
+
+.layout-tv .headerTop {
+    padding-top: max(1em, var(--abyss-safe-top)) !important;
+}
+
+/* ── Main scroll / sections ── */
+
+.scrollContainer {
+    padding-left: max(var(--abyss-gutter), var(--abyss-safe-left)) !important;
+    padding-right: max(var(--abyss-gutter), var(--abyss-safe-right)) !important;
+    padding-top: 36px;
+    box-sizing: border-box;
+}
+
+.homeSectionsContainer {
+    padding-left: max(var(--abyss-gutter), var(--abyss-safe-left)) !important;
+    padding-right: max(var(--abyss-gutter), var(--abyss-safe-right)) !important;
+}
+
+#indexPage:has(.featurediframe) #favoritesTab {
+    margin-top: 7.5rem !important;
+}
+
+.layout-mobile #indexPage:has(.featurediframe) #favoritesTab {
+    margin-top: max(5rem, calc(4rem + var(--abyss-safe-top))) !important;
+}
+
+.layout-tv #indexPage:has(.featurediframe) #favoritesTab {
+    margin-top: 6.5rem !important;
+}
+
+.verticalSection .sectionTitle,
+.sectionTitleContainer-cards .sectionTitle-cards,
+.homeSectionsContainer .sectionTitle {
+    padding-left: 0.15em;
+    padding-right: 0.15em;
+}
+
+.layout-mobile .sectionTitleTextButton:not(.padded-left) {
+    margin-left: 0 !important;
+}
+
+.layout-mobile .sectionTitle {
+    padding-top: 0;
+}
+
+/* ── Floating panels (drawer, footer) ── */
+
+.mainDrawer {
+    margin-top: max(var(--abyss-gutter-lg), var(--abyss-safe-top));
+    margin-bottom: max(var(--abyss-gutter-lg), var(--abyss-safe-bottom));
+}
+
+.mainDrawer.drawer-open {
+    margin: max(var(--abyss-gutter-lg), var(--abyss-safe-top))
+        max(var(--abyss-gutter), var(--abyss-safe-right))
+        max(var(--abyss-gutter-lg), var(--abyss-safe-bottom))
+        max(var(--abyss-gutter), var(--abyss-safe-left));
+}
+
+.appfooter {
+    margin: var(--abyss-gutter-lg) max(var(--abyss-gutter), var(--abyss-safe-right))
+        max(var(--abyss-gutter-lg), var(--abyss-safe-bottom))
+        max(var(--abyss-gutter), var(--abyss-safe-left));
+}
+
+.layout-tv .mainDrawer.drawer-open {
+    margin: 28px 32px;
+}
+
+.layout-tv .appfooter {
+    margin: 28px 32px 32px;
+}
+
+/* ── Item detail ── */
+
+.layout-mobile .detailRibbon,
+.layout-mobile .detailPagePrimaryContent,
+.layout-mobile .detailPageContent {
+    padding-left: max(var(--abyss-gutter), var(--abyss-safe-left)) !important;
+    padding-right: max(var(--abyss-gutter), var(--abyss-safe-right)) !important;
+}
+
+.layout-mobile .itemBackdrop {
+    margin-top: max(3.5rem, calc(2.5rem + var(--abyss-safe-top)));
+}
+
+.layout-tv .detailRibbon,
+.layout-tv .detailPagePrimaryContent,
+.layout-tv .detailPageContent {
+    padding-left: max(28px, var(--abyss-gutter)) !important;
+    padding-right: max(28px, var(--abyss-gutter)) !important;
+}
+
+.layout-tv .detailImageContainer .card {
+    top: 8% !important;
+}
+
+/* ── Now playing bar ── */
+
+.nowPlayingBar {
+    margin-left: max(14px, var(--abyss-safe-left)) !important;
+    margin-right: max(14px, var(--abyss-safe-right)) !important;
+    margin-bottom: max(14px, var(--abyss-safe-bottom)) !important;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.nowPlayingBarInfoContainer {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.nowPlayingBarText {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.nowPlayingBarCenter {
+    flex: 0 0 auto;
+}
+
+.nowPlayingBarPositionContainer {
+    left: 0;
+    right: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.layout-tv .nowPlayingBar .paper-icon-button-light,
+.layout-tv .nowPlayingBar .mediaButton {
+    min-width: 2.85rem;
+    min-height: 2.85rem;
+}
+
+/* ── Search ── */
+
+.searchSuggestionsList {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media all and (max-width: 50em) {
+    .searchSuggestionsList {
+        padding-left: max(24px, var(--abyss-gutter)) !important;
+        padding-right: max(var(--abyss-gutter), var(--abyss-safe-right));
+    }
+
+    .verticalSection.searchSuggestions {
+        align-items: stretch;
+        padding-left: var(--abyss-gutter) !important;
+        padding-right: var(--abyss-gutter) !important;
+    }
+}
+
+/* ── Cards row spacing ── */
+
+.itemsContainer > .card > .cardBox {
+    margin-left: max(0.45em, calc(var(--abyss-gutter) * 0.45)) !important;
+    margin-right: max(0.5em, calc(var(--abyss-gutter) * 0.5)) !important;
+}
+
+.layout-tv .itemsContainer > .card > .cardBox {
+    margin-left: 0.65em !important;
+    margin-right: 0.75em !important;
+}
+
+/* ── Player OSD (viewport-specific) ── */
+
+.layout-mobile #videoOsdPage .osdTextContainer.osdMainTextContainer,
+.layout-mobile #videoOsdPage .osdTextContainer.osdSecondaryMediaInfo {
+    left: max(14px, var(--abyss-safe-left));
+}
+
+.layout-mobile #videoOsdPage .osdControls {
+    padding-left: max(12px, var(--abyss-safe-left)) !important;
+    padding-right: max(12px, var(--abyss-safe-right)) !important;
+}
+
+.layout-tv #videoOsdPage .videoOsdBottom .buttons {
+    min-height: 4.25rem;
+}
+
+.layout-tv #videoOsdPage .videoOsdBottom .btnPause {
+    min-width: 3.75rem !important;
+    min-height: 3.75rem !important;
+}
+
+.layout-tv #videoOsdPage .osdTitle {
+    font-size: clamp(1.35rem, 2vw, 2rem);
+}
+
+/* ── Touch seek overlay ── */
+
+.layout-mobile #abyss-seek-feedback.is-rewind {
+    left: max(8%, var(--abyss-safe-left));
+}
+
+.layout-mobile #abyss-seek-feedback.is-forward {
+    right: max(8%, var(--abyss-safe-right));
+}
+
+/* ── Narrow phones ── */
+
+@media all and (max-width: 26em) {
+    .headerLeft,
+    .headerRight {
+        padding-left: max(12px, var(--abyss-safe-left)) !important;
+        padding-right: max(12px, var(--abyss-safe-right)) !important;
+    }
+
+    .scrollContainer {
+        padding-top: 28px;
+    }
+}

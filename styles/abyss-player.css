@@ -416,7 +416,6 @@
     background-color: rgba(var(--abyss-glass-tint), var(--abyss-glass-fill-elevated)) !important;
     border: 0.5px solid rgba(var(--abyss-glass-highlight), var(--abyss-glass-border-alpha)) !important;
     box-shadow: var(--abyss-glass-depth), var(--abyss-glass-inset) !important;
-    margin: 0 14px 14px;
     border-radius: var(--abyss-radius-lg, 22px) !important;
     padding: 10px 14px 12px !important;
     -webkit-backdrop-filter: var(--abyss-glass-filter);
