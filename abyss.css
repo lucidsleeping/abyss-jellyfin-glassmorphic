@@ -572,9 +572,7 @@ a[data-role="button"]:hover {
 
 /* actionSheet — styles/abyss-polish.css */
 
-.cardContent.cardImageContainer {
-    box-shadow: 0 0 3px rgba(200, 200, 200, 0.35) inset;
-}
+/* card image inset rim — removed; styles/abyss-polish.css */
 
 .paper-icon-button-light {
     border-radius: var(--abyss-radius-pill, 50%);
