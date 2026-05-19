@@ -179,6 +179,19 @@ div[data-role="controlgroup"] a[data-role="button"]:not(.ui-btn-active) {
     background-color: rgba(var(--abyss-glass-surface), var(--abyss-glass-track-fill)) !important;
     border-color: rgba(var(--abyss-glass-highlight), var(--abyss-glass-border-subtle)) !important;
     isolation: isolate;
+    overflow: hidden;
+    contain: paint;
+}
+
+/* Header tabs: inset rim + negative margin caused stacked “ghost” arcs above the pill */
+.headerTabs .emby-tabs-slider {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.16) !important;
+}
+
+.headerTabs .emby-tab-button-active {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    box-shadow: var(--abyss-glass-shadow-knob) !important;
 }
 
 .emby-tab-button {
@@ -352,16 +365,7 @@ a[data-role="button"]:not(:hover),
         backdrop-filter: var(--abyss-glass-filter-light) !important;
     }
 
-    .skinHeader-withBackground::before {
-        -webkit-backdrop-filter: var(--abyss-glass-filter-heavy);
-        backdrop-filter: var(--abyss-glass-filter-heavy);
-        background: linear-gradient(
-            180deg,
-            rgba(var(--abyss-glass-tint), 0.5) 0%,
-            rgba(var(--abyss-glass-tint), 0.15) 55%,
-            transparent 100%
-        );
-    }
+    /* Header blur feather — styles/abyss-polish.css */
 
     .paper-icon-button-light:hover,
     #itemDetailPage .itemProgressBar,

@@ -59,13 +59,17 @@
 		(async () => {
 			const $ = id => document.getElementById(id);
 
+			function getStorage() {
+				try { return window.top.localStorage; } catch { return localStorage; }
+			}
+
 			function getBaseUrl() {
 				try {
 					const loc = window.top.location;
 					return `${loc.protocol}//${loc.host}`;
 				} catch {
 					try {
-						const creds = JSON.parse(localStorage.getItem('jellyfin_credentials'));
+						const creds = JSON.parse(getStorage().getItem('jellyfin_credentials') || '{}');
 						const s = creds?.Servers?.[0];
 						return (s?.ManualAddress || s?.LocalAddress || s?.RemoteAddress || '').replace(/\/$/, '');
 					} catch { return ''; }
@@ -74,14 +78,21 @@
 
 			function getAuth() {
 				try {
-					const creds = JSON.parse(localStorage.getItem('jellyfin_credentials'));
+					const creds = JSON.parse(getStorage().getItem('jellyfin_credentials') || '{}');
 					const s = creds?.Servers?.[0];
-					return { token: s?.AccessToken, userId: s?.UserId };
+					return {
+						token: s?.AccessToken || s?.accessToken,
+						userId: s?.UserId || s?.userId
+					};
 				} catch { return {}; }
 			}
 
 			function authHeaders(token) {
-				return { 'Authorization': `MediaBrowser Client="Jellyfin Web", Device="Abyss Spotlight", DeviceId="abyss-spotlight", Version="1.0", Token="${token}"` };
+				const client = 'MediaBrowser Client="Jellyfin Web", Device="Abyss Spotlight", DeviceId="abyss-spotlight", Version="10.11.0"';
+				return {
+					'X-Emby-Authorization': `${client}, Token="${token}"`,
+					'X-Emby-Token': token
+				};
 			}
 
 			function formatRuntime(ticks) {
@@ -177,8 +188,8 @@
 				let items = [];
 				try {
 					const [resumeRes, nextUpRes] = await Promise.all([
-						fetch(`${base}/Users/${userId}/Items/Resume?Limit=3&Recursive=true&Fields=${FIELDS}`, { headers }),
-						fetch(`${base}/Shows/NextUp?Limit=5&UserId=${userId}&Fields=${FIELDS}`, { headers })
+						fetch(`${base}/Users/${userId}/Items/Resume?Limit=3&Recursive=true&Fields=${FIELDS}`, { headers, credentials: 'same-origin' }),
+						fetch(`${base}/Shows/NextUp?Limit=5&UserId=${userId}&Fields=${FIELDS}`, { headers, credentials: 'same-origin' })
 					]);
 					const resumeData = resumeRes.ok ? await resumeRes.json() : {};
 					const nextUpData = nextUpRes.ok ? await nextUpRes.json() : {};
@@ -195,7 +206,7 @@
 					try {
 						const fallbackRes = await fetch(
 							`${base}/Users/${userId}/Items?Limit=8&Recursive=true&SortBy=Random&IncludeItemTypes=Movie,Series&Fields=${FIELDS}`,
-							{ headers }
+							{ headers, credentials: 'same-origin' }
 						);
 						if (fallbackRes.ok) {
 							const d = await fallbackRes.json();

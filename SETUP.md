@@ -70,37 +70,53 @@ sudo ./abyss-setup-vX.X.X.sh
 <details>
 <summary><h3>Method 1: Automated Init Script (recommended for <code>linuxserver/jellyfin</code>)</h3></summary>
 
-The `linuxserver/jellyfin` image supports custom initialization scripts. This method automatically downloads and re-applies the Abyss spotlight theme every time your container starts or updates, making it completely persistent. 
+The `linuxserver/jellyfin` image supports custom initialization scripts. On every container start, [`abyss-spotlight.sh`](scripts/docker/abyss-spotlight.sh) installs the **full theme** (all CSS under `/abyss/`), **Spotlight** (home banner + chunk patch), and the **touch** helper script.
 
-**1. Download the Init Script**
-Download the [`abyss-spotlight.sh`](https://raw.githubusercontent.com/AumGupta/abyss-jellyfin/main/scripts/docker/abyss-spotlight.sh) script and place it in your Jellyfin config directory under a new folder named `custom-cont-init.d`. Make sure it is executable.
+**1. Install the init script**
 
 ```bash
 mkdir -p ./jellyfin/config/custom-cont-init.d
-curl -o ./jellyfin/config/custom-cont-init.d/abyss-spotlight.sh
+curl -fsSL -o ./jellyfin/config/custom-cont-init.d/abyss-spotlight.sh \
+  https://raw.githubusercontent.com/lucidsleeping/abyss-jellyfin-glassmorphic/main/scripts/docker/abyss-spotlight.sh
 chmod +x ./jellyfin/config/custom-cont-init.d/abyss-spotlight.sh
-````
+```
 
-**2. Mount the Volume in Docker Compose**
-You must explicitly mount the init script directory in your `docker-compose.yml` for the container to detect it:
+**2. Docker Compose**
 
 ```yaml
 services:
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:latest
+    environment:
+      # Optional — auto-apply Custom CSS on startup
+      - JELLYFIN_URL=http://127.0.0.1:8096
+      - ABYSS_ADMIN_USER=your_admin
+      - ABYSS_ADMIN_PASSWORD=your_password
+      # Optional — use your fork (default: lucidsleeping/abyss-jellyfin-glassmorphic)
+      # - ABYSS_REPO=lucidsleeping/abyss-jellyfin-glassmorphic
+      # - ABYSS_BRANCH=main
     volumes:
-      - /path/to/your/jellyfin/config:/config
-      - /path/to/your/jellyfin/config/custom-cont-init.d:/custom-cont-init.d # <-- Add this line
-      # ... your other media mounts ...
+      - ./jellyfin/config:/config
+      - ./jellyfin/config/custom-cont-init.d:/custom-cont-init.d
+      # Optional — install from a local clone instead of GitHub
+      # - ./abyss-jellyfin-glassmorphic:/abyss-source:ro
+    # Optional local source:
+    # environment:
+    #   - ABYSS_LOCAL_DIR=/abyss-source
 ```
 
-**3. Apply the CSS & Restart**
+**3. Custom CSS**
 
-  * Go to your Jellyfin **Dashboard \> General \> Custom CSS** and add the import URL:
+Either set `ABYSS_ADMIN_USER` / `ABYSS_ADMIN_PASSWORD` so the script applies this via API, or paste manually in **Dashboard > General > Custom CSS**:
+
+```css
+@import url('/web/abyss/abyss.css');
 ```
-@import url('https://cdn.jsdelivr.net/gh/AumGupta/abyss-jellyfin@main/abyss.css');
-```
-  * Restart your container (`docker compose up -d`). You can check the container logs to verify the script ran successfully.
+
+**4. Restart** and check logs: `docker logs jellyfin 2>&1 | grep abyss`
+
+Verify theme: `http://YOUR_SERVER:8096/abyss/styles/abyss-layout.css`  
+Verify Spotlight: home page shows the Continue Watching hero banner.
 
 </details>
 

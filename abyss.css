@@ -6,6 +6,7 @@
 @import url('./styles/abyss-player.css');
 @import url('./styles/abyss-touch.css');
 @import url('./styles/abyss-layout.css');
+/* abyss-polish.css — loaded after abyss rules via abyss-bundle.css (Custom CSS) */
 
 @font-face {
     font-family: 'Material Icons Round';
@@ -339,15 +340,14 @@ input[type="radio"]:checked {
     background-color: transparent;
 }
 
+/* skinHeader-withBackground blur — styles/abyss-polish.css */
 .skinHeader-withBackground::before {
     content: '';
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: 8em;
     pointer-events: none;
-    background: none;
     z-index: 1;
 }
 
@@ -568,25 +568,20 @@ a[data-role="button"]:hover {
 .raised:hover,
 .fab:hover,
 .navMenuOption:hover,
-.listItem:hover,
-.actionSheetMenuItem:hover,
+.listItem:not(.actionSheetMenuItem):hover,
 .css-17c09up:hover {
     background: rgb(var(--abyss-accent)) !important;
     color: #121212;
     font-weight: 700;
 }
 
+/* actionSheetMenuItem hover — styles/abyss-polish.css */
+
 .listItem-content:hover {
     color: #121212;
 }
 
-.actionSheetMenuItem {
-    border-radius: var(--abyss-radius) !important;
-}
-
-.actionSheetContent {
-    padding: .7em .6em !important;
-}
+/* actionSheet — styles/abyss-polish.css */
 
 .cardContent.cardImageContainer {
     box-shadow: 0 0 3px rgba(200, 200, 200, 0.35) inset;
@@ -604,11 +599,7 @@ a[data-role="button"]:hover {
     color: rgb(var(--abyss-accent)) !important;
 }
 
-.emby-tab-button {
-    padding: 0.5em 1.5em;
-    margin: 0 2.5px;
-    border-radius: var(--abyss-radius-pill, 50px);
-}
+/* emby-tab-button padding — styles/abyss-polish.css + abyss-liquid-glass.css */
 
 .button-flat:hover {
     background: rgba(0, 0, 0, 0.4);
@@ -942,48 +933,48 @@ div[data-role="controlgroup"] a[data-role="button"] {
     margin: 0;
 }
 
-.listItem:hover,
-.listItem:hover .secondary,
-.listItem:hover .listItem-secondaryText,
-.listItem:hover p,
-.listItem:hover span,
-.listItem:hover div,
-.listItem:hover .runtime,
-.listItem:hover .starIcon::before,
-.listItem:hover .starRatingContainer,
-.listItem:hover .listItem-overview {
+.listItem:not(.actionSheetMenuItem):hover,
+.listItem:not(.actionSheetMenuItem):hover .secondary,
+.listItem:not(.actionSheetMenuItem):hover .listItem-secondaryText,
+.listItem:not(.actionSheetMenuItem):hover p,
+.listItem:not(.actionSheetMenuItem):hover span,
+.listItem:not(.actionSheetMenuItem):hover div,
+.listItem:not(.actionSheetMenuItem):hover .runtime,
+.listItem:not(.actionSheetMenuItem):hover .starIcon::before,
+.listItem:not(.actionSheetMenuItem):hover .starRatingContainer,
+.listItem:not(.actionSheetMenuItem):hover .listItem-overview {
     color: #121212b7 !important;
 }
 
-.listItem:hover,
-.listItem:hover .listItemBodyText {
+.listItem:not(.actionSheetMenuItem):hover,
+.listItem:not(.actionSheetMenuItem):hover .listItemBodyText {
     color: #121212 !important;
 }
 
-.listItem:hover .material-icons,
-.listItem:hover .listItemImageButton {
+.listItem:not(.actionSheetMenuItem):hover .material-icons,
+.listItem:not(.actionSheetMenuItem):hover .listItemImageButton {
     color: #121212 !important;
 }
 
-.listItem:hover .countIndicator,
-.listItem:hover .playedIndicator {
+.listItem:not(.actionSheetMenuItem):hover .countIndicator,
+.listItem:not(.actionSheetMenuItem):hover .playedIndicator {
     background: rgba(0, 0, 0, 0.15) !important;
     color: #121212 !important;
 }
 
-.listItem:hover .itemProgressBarForeground {
+.listItem:not(.actionSheetMenuItem):hover .itemProgressBarForeground {
     background-color: rgba(18, 18, 18, 0.6) !important;
 }
 
-.listItem:hover .itemProgressBar {
+.listItem:not(.actionSheetMenuItem):hover .itemProgressBar {
     background: rgba(18, 18, 18, 0.2) !important;
 }
 
-.listItem:hover .ratingbutton-icon-withrating {
+.listItem:not(.actionSheetMenuItem):hover .ratingbutton-icon-withrating {
     color: rgb(249, 38, 114) !important;
 }
 
-.listItem:hover .listItemImageButton-icon {
+.listItem:not(.actionSheetMenuItem):hover .listItemImageButton-icon {
     color: rgba(255, 255, 255, 0.9) !important;
 }
 
@@ -1437,9 +1428,7 @@ div[data-role="controlgroup"] a[data-role="button"]:last-child {
     color: inherit !important;
 }
 
-.sectionTitleTextButton:hover {
-    color: transparent;
-}
+/* sectionTitleTextButton:hover — styles/abyss-polish.css */
 
 /* Progress bars on item pages */
 #indexPage .innerCardFooterClear,
@@ -1963,6 +1952,14 @@ div[data-role="controlgroup"] a[data-role="button"]:last-child {
         opacity 0.37s var(--abyss-ease),
         box-shadow 0.37s var(--abyss-ease),
         transform 0.37s var(--abyss-ease) !important;
+}
+
+.headerTabs .emby-tabs-slider,
+.headerTabs .emby-tab-button,
+.headerTabs .emby-tab-button-active {
+    transition: background 0.37s var(--abyss-ease),
+        color 0.37s var(--abyss-ease),
+        border-color 0.37s var(--abyss-ease) !important;
 }
 
 .mainDrawer {

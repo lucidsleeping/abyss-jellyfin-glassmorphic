@@ -1,0 +1,3 @@
+/* Abyss entry for Jellyfin Custom CSS — load theme then polish (cascade order) */
+@import url('./abyss.css');
+@import url('./styles/abyss-polish.css');

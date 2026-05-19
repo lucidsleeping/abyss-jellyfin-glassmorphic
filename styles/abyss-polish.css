@@ -1,0 +1,199 @@
+/* Abyss — UI polish: menus, cards, typography, header blur, player back */
+
+/* ── 1. Context menu: subtle row highlight (not full accent pill) ── */
+
+.actionSheetContent {
+    padding: 0.5em !important;
+}
+
+.actionSheetMenuItem {
+    display: flex !important;
+    align-items: center;
+    gap: 0.75em;
+    padding: 0.55em 0.9em !important;
+    margin: 0.12em 0 !important;
+    font-weight: 500 !important;
+    font-size: 0.95rem !important;
+    letter-spacing: 0.01em;
+    border-radius: calc(var(--abyss-radius-pill, 999px) * 0.35) !important;
+    border: 0.5px solid transparent !important;
+    box-shadow: none !important;
+}
+
+.actionSheetMenuItem:hover,
+.actionSheetMenuItem:focus {
+    background: rgba(var(--abyss-glass-surface), 0.14) !important;
+    color: rgba(255, 255, 255, 0.96) !important;
+    font-weight: 500 !important;
+    border-color: rgba(var(--abyss-glass-highlight), 0.12) !important;
+    box-shadow: none !important;
+}
+
+.actionSheetMenuItem .listItemIcon {
+    margin: 0 !important;
+    flex-shrink: 0;
+}
+
+/* ── 2. Card overlay buttons: spacing, no stacked glass rims ── */
+
+.cardOverlayButton-br.cardIndicators {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.42em;
+    padding: 0.38em 0.48em !important;
+    right: 0.42em !important;
+    bottom: 0.42em !important;
+    left: auto !important;
+}
+
+.cardOverlayButton-br .paper-icon-button-light,
+.cardOverlayButton-br .cardOverlayButtonIcon {
+    margin: 0 !important;
+    flex-shrink: 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
+    border: 0.5px solid rgba(var(--abyss-glass-highlight), 0.24) !important;
+    background-color: rgba(var(--abyss-glass-tint), 0.45) !important;
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    backdrop-filter: blur(14px) saturate(160%);
+}
+
+.cardOverlayButton-br .paper-icon-button-light:hover {
+    background-color: rgba(var(--abyss-glass-surface), 0.22) !important;
+    color: rgb(var(--abyss-accent)) !important;
+    transform: scale(1.05);
+}
+
+/* ── 3. Consistent labels (sections, tabs, cards) ── */
+
+.sectionTitle,
+.sectionTitleTextButton > .sectionTitle {
+    font-weight: 600 !important;
+    font-size: 1.05rem !important;
+    letter-spacing: 0.015em;
+    line-height: 1.25;
+}
+
+.sectionTitleTextButton:hover {
+    color: rgb(var(--abyss-accent)) !important;
+}
+
+.emby-tab-button {
+    padding: 0.55em 1.4em !important;
+    min-width: 5.25em;
+    text-align: center;
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.02em;
+}
+
+.emby-tab-button-active {
+    font-size: 0.95rem !important;
+    font-weight: 600 !important;
+}
+
+.cardText {
+    font-weight: 500 !important;
+    font-size: 0.88rem !important;
+    opacity: 0.72 !important;
+    line-height: 1.3;
+    padding-top: 0.35em !important;
+}
+
+.cardText-first {
+    font-weight: 600 !important;
+    font-size: 0.98rem !important;
+    opacity: 1 !important;
+}
+
+.itemName,
+.cardText-first {
+    letter-spacing: 0.01em;
+}
+
+/* ── 4. Header blur: soft feathered edge (no hard cutoff) ── */
+
+.skinHeader-withBackground::before {
+    height: 12em !important;
+    background: linear-gradient(
+        180deg,
+        rgba(var(--abyss-glass-tint), 0.78) 0%,
+        rgba(var(--abyss-glass-tint), 0.42) 42%,
+        rgba(var(--abyss-glass-tint), 0.14) 72%,
+        transparent 100%
+    ) !important;
+    -webkit-backdrop-filter: blur(36px) saturate(185%) brightness(1.1) contrast(1.03) !important;
+    backdrop-filter: blur(36px) saturate(185%) brightness(1.1) contrast(1.03) !important;
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 48%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 0%, #000 48%, transparent 100%);
+}
+
+@supports (backdrop-filter: blur(1px)) {
+    .skinHeader-withBackground::before {
+        background: linear-gradient(
+            180deg,
+            rgba(var(--abyss-glass-tint), 0.65) 0%,
+            rgba(var(--abyss-glass-tint), 0.28) 50%,
+            transparent 100%
+        ) !important;
+    }
+}
+
+/* ── 5. Video player: restore back button ── */
+
+#videoOsdPage .osdHeader {
+    pointer-events: none;
+}
+
+#videoOsdPage .osdHeader .headerTop,
+#videoOsdPage .osdHeader .headerLeft,
+#videoOsdPage .osdHeader .headerRight {
+    pointer-events: all;
+}
+
+#videoOsdPage .osdHeader .headerLeft {
+    display: flex !important;
+    align-items: center;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: fixed !important;
+    top: max(14px, env(safe-area-inset-top));
+    left: max(14px, env(safe-area-inset-left));
+    z-index: 25;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+#videoOsdPage .osdHeader .headerBackButton,
+#videoOsdPage .osdHeader .headerButton.headerBackButton {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: all !important;
+    min-width: 2.65rem !important;
+    min-height: 2.65rem !important;
+    margin: 0 !important;
+    border-radius: 50% !important;
+    color: #fff !important;
+    background: rgba(var(--abyss-glass-surface), 0.16) !important;
+    background-image: var(--abyss-glass-face) !important;
+    -webkit-backdrop-filter: var(--abyss-glass-filter-light);
+    backdrop-filter: var(--abyss-glass-filter-light);
+    border: 0.5px solid rgba(var(--abyss-glass-highlight), 0.38) !important;
+    box-shadow: var(--abyss-glass-shadow-knob), var(--abyss-glass-inset-soft) !important;
+}
+
+#videoOsdPage .osdHeader .headerBackButton:hover {
+    background-color: rgba(var(--abyss-glass-surface), 0.28) !important;
+    color: rgb(var(--abyss-accent)) !important;
+}
+
+/* Keep title clear of back control */
+#videoOsdPage .osdTextContainer.osdMainTextContainer {
+    left: max(4.25rem, calc(env(safe-area-inset-left) + 3.5rem));
+}
+
+#videoOsdPage .osdTextContainer.osdSecondaryMediaInfo {
+    left: max(4.25rem, calc(env(safe-area-inset-left) + 3.5rem));
+}

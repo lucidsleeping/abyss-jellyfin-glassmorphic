@@ -59,16 +59,29 @@
 })();
 
 document.addEventListener("DOMContentLoaded", () => {
-
   const homeTab = document.getElementById("homeTab");
   if (!homeTab) return;
 
   const iframe = homeTab.querySelector(".featurediframe");
   if (!iframe) return;
 
-  new MutationObserver(() => {
-    iframe.style.display = homeTab.classList.contains("is-active") ? "block" : "none";
-  }).observe(homeTab, { attributes: true, attributeFilter: ["class"] });
+  const syncSpotlightIframe = () => {
+    const active = homeTab.classList.contains("is-active");
+    iframe.style.display = active ? "block" : "none";
+    iframe.hidden = !active;
+    iframe.setAttribute("aria-hidden", active ? "false" : "true");
+  };
+
+  syncSpotlightIframe();
+  new MutationObserver(syncSpotlightIframe).observe(homeTab, {
+    attributes: true,
+    attributeFilter: ["class"]
+  });
+
+  // Jellyfin may activate the home tab after DOMContentLoaded
+  requestAnimationFrame(syncSpotlightIframe);
+  setTimeout(syncSpotlightIframe, 100);
+  setTimeout(syncSpotlightIframe, 500);
 });
 
 (function loadAbyssTouch() {

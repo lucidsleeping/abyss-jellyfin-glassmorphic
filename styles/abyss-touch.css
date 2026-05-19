@@ -89,7 +89,8 @@
     }
 
     /* Cards: slightly larger overlay play on touch */
-    .layout-mobile .cardOverlayButton-br {
-        transform: scale(1.08);
+    .layout-mobile .cardOverlayButton-br .paper-icon-button-light {
+        min-width: 2.35rem;
+        min-height: 2.35rem;
     }
 }

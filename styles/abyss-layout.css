@@ -62,50 +62,82 @@
     padding-right: max(var(--abyss-header-pad), var(--abyss-safe-right)) !important;
 }
 
+/* Home / Favorites: one header row — menu | tabs | actions (matches Jellyfin structure) */
 .withSectionTabs .headerTop {
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 0.35em;
+    display: grid !important;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: "header-left header-tabs header-right";
+    align-items: center !important;
+    column-gap: 0.65em;
+    row-gap: 0;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
 }
 
-.withSectionTabs .headerLeft,
+.withSectionTabs .headerLeft {
+    grid-area: header-left;
+    width: auto !important;
+    justify-self: start;
+    padding-right: 0.25em !important;
+}
+
+.withSectionTabs .headerTabs.sectionTabs {
+    grid-area: header-tabs;
+    justify-self: start;
+    align-self: center;
+    width: fit-content !important;
+    max-width: 100%;
+    margin: 0 !important;
+    padding-top: 0 !important;
+    transform: none;
+    position: relative;
+    z-index: 3;
+}
+
 .withSectionTabs .headerRight {
-    width: 100%;
-    justify-content: space-between;
+    grid-area: header-right;
+    width: auto !important;
+    justify-self: end;
+    padding-left: 0.25em !important;
 }
 
-.headerTabs.sectionTabs {
-    margin-top: -1.5em;
-    margin-left: auto;
-    margin-right: auto;
+.headerTabs.sectionTabs.emby-tabs:has(.emby-tabs-slider) {
+    overflow: visible;
 }
 
 .emby-tabs-slider {
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 0;
+    margin-right: 0;
 }
 
-@media all and (min-width: 50em) and (max-width: 74.99em) {
-    .headerTabs.sectionTabs {
-        margin-top: -2em;
+/* Pull tabs over hero on wide layouts — transform avoids margin-top paint ghosting */
+@media all and (min-width: 100em) {
+    .pageWithAbsoluteTabs.withSectionTabs .headerTabs.sectionTabs {
+        transform: translateY(-3.4em);
     }
 }
 
-@media all and (min-width: 75em) {
-    .headerTabs.sectionTabs {
-        margin-top: -4.9em !important;
+@media all and (min-width: 75em) and (max-width: 99.99em) {
+    .pageWithAbsoluteTabs.withSectionTabs .headerTabs.sectionTabs {
+        transform: translateY(-2.25em);
     }
 }
 
-.layout-mobile .headerTabs.sectionTabs {
-    margin-top: -0.35em;
-    padding-top: 4px;
+.layout-mobile .withSectionTabs .headerTabs.sectionTabs {
+    transform: none;
 }
 
-.layout-tv .headerTabs.sectionTabs {
-    margin-top: -1.25em;
+.layout-tv .withSectionTabs .headerTabs.sectionTabs {
+    transform: translateY(-1em);
     font-size: 115%;
+}
+
+/* Align circular header buttons with tab pill baseline */
+.withSectionTabs .headerRight .paper-icon-button-light,
+.withSectionTabs .headerLeft .paper-icon-button-light,
+.withSectionTabs .headerUserButtonRound {
+    align-self: center;
+    vertical-align: middle;
 }
 
 .layout-tv .headerTop {
@@ -124,6 +156,21 @@
 .homeSectionsContainer {
     padding-left: max(var(--abyss-gutter), var(--abyss-safe-left)) !important;
     padding-right: max(var(--abyss-gutter), var(--abyss-safe-right)) !important;
+}
+
+/* Spotlight hero iframe — keep visible when home tab is active */
+#indexPage #homeTab.is-active .featurediframe {
+    display: block !important;
+    visibility: visible !important;
+    width: 100% !important;
+    min-height: 420px;
+    border: 0;
+    position: relative;
+    z-index: 1;
+}
+
+#indexPage #homeTab:not(.is-active) .featurediframe {
+    display: none !important;
 }
 
 #indexPage:has(.featurediframe) #favoritesTab {

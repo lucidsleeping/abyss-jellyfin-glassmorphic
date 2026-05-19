@@ -2,7 +2,7 @@ $ErrorActionPreference = "Stop"
 
 # Constants 
 
-$REPO     = "lucidsleeping/abyss-jellyfin-touch-ui"
+$REPO     = if ($env:ABYSS_REPO) { $env:ABYSS_REPO } else { "lucidsleeping/abyss-jellyfin-glassmorphic" }
 $BRANCH   = "main"
 $RAW      = "https://raw.githubusercontent.com/$REPO/$BRANCH"
 $REPO_URL = "https://github.com/$REPO"
@@ -18,11 +18,13 @@ $TOUCH_FILES = @(
 )
 
 $THEME_FILES = @(
+    "abyss-bundle.css",
     "abyss.css",
     "styles/abyss-liquid-glass.css",
     "styles/abyss-player.css",
     "styles/abyss-touch.css",
     "styles/abyss-layout.css",
+    "styles/abyss-polish.css",
     "styles/abyss-je.css",
     "styles/abyss-mbe.css"
 )
@@ -149,7 +151,7 @@ function Sync-ThemeFiles {
 
 function Get-AbyssCssImport {
     $version = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
-    return "@import url('/abyss/abyss.css?v=$version');`n/* Customise Abyss: https://aumgupta.github.io/abyss-jellyfin/ */"
+    return "@import url('/web/abyss/abyss-bundle.css?v=$version');`n/* Abyss — abyss.css + abyss-polish.css in cascade order */"
 }
 
 function Sync-TouchFiles {
@@ -351,7 +353,7 @@ function Install-Abyss {
     } catch {
         Write-Fail "Failed to apply CSS."
         Write-Info "Add this manually in Dashboard > General > Custom CSS:"
-        Write-Info "@import url('/abyss/abyss.css');"
+        Write-Info "@import url('/web/abyss/abyss.css');"
     }
     Write-Host ""
 

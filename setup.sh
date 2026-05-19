@@ -7,7 +7,7 @@ set -euo pipefail
 # ==============================================================================
 
 # Fallback download source (only used when a file is missing from the local repo)
-REPO="${ABYSS_REPO:-lucidsleeping/abyss-jellyfin-touch-ui}"
+REPO="${ABYSS_REPO:-lucidsleeping/abyss-jellyfin-glassmorphic}"
 BRANCH="${ABYSS_BRANCH:-main}"
 RAW="https://raw.githubusercontent.com/${REPO}/${BRANCH}"
 REPO_URL="https://github.com/${REPO}"
@@ -16,6 +16,7 @@ SPOTLIGHT_FILES=(
     "scripts/spotlight/spotlight.html"
     "scripts/spotlight/spotlight.css"
     "scripts/spotlight/home-html.chunk.js"
+    "scripts/spotlight/abyss-spotlight-inject.js"
 )
 
 TOUCH_FILES=(
@@ -23,11 +24,13 @@ TOUCH_FILES=(
 )
 
 THEME_FILES=(
+    "abyss-bundle.css"
     "abyss.css"
     "styles/abyss-liquid-glass.css"
     "styles/abyss-player.css"
     "styles/abyss-touch.css"
     "styles/abyss-layout.css"
+    "styles/abyss-polish.css"
     "styles/abyss-je.css"
     "styles/abyss-mbe.css"
 )
@@ -37,11 +40,13 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Required for a complete install (liquid glass + player OSD)
 REQUIRED_THEME_FILES=(
+    "abyss-bundle.css"
     "abyss.css"
     "styles/abyss-liquid-glass.css"
     "styles/abyss-player.css"
     "styles/abyss-touch.css"
     "styles/abyss-layout.css"
+    "styles/abyss-polish.css"
 )
 
 # Detect OS once at startup
@@ -280,6 +285,12 @@ verify_theme_install() {
         ok "abyss.css imports liquid glass material."
     fi
 
+    if grep -q 'abyss-layout.css' "${abyss_dir}/abyss.css" 2>/dev/null; then
+        ok "abyss.css imports responsive layout alignment."
+    else
+        warn "abyss.css may be missing abyss-layout.css import."
+    fi
+
     echo ""
 }
 
@@ -287,7 +298,8 @@ verify_theme_install() {
 abyss_css_import() {
     local version
     version="$(date +%s)"
-    printf "@import url('/abyss/abyss.css?v=%s');\n/* Abyss — served from jellyfin-web/abyss/ */" "$version"
+    # bundle loads abyss.css then abyss-polish.css (polish must follow theme rules)
+    printf "@import url('/web/abyss/abyss-bundle.css?v=%s');\n/* Abyss — served from jellyfin-web/abyss/ */" "$version"
 }
 
 apply_custom_css() {
@@ -325,7 +337,7 @@ print(json.dumps(d))
         -H "Content-Type: application/json" \
         -H "X-Emby-Authorization: ${api_header}" \
         -d "$updated_branding" >/dev/null 2>&1; then
-        ok "Custom CSS set to import /abyss/abyss.css"
+        ok "Custom CSS set to import /web/abyss/abyss.css"
         info "$(printf '%b' "$css" | head -1)"
     else
         fail "Failed to apply CSS via API."
@@ -360,25 +372,34 @@ install_touch_ui() {
         return
     fi
 
-    if grep -q 'abyss-touch.js' "$index"; then
-        skip "Touch script already linked in index.html."
-    else
-        [[ ! -f "${index}.bak.abyss" ]] && cp -f "$index" "${index}.bak.abyss" && ok "Backed up index.html."
-        python3 -c "
+    [[ ! -f "${index}.bak.abyss" ]] && cp -f "$index" "${index}.bak.abyss" && ok "Backed up index.html."
+    python3 -c "
 import sys
 path = sys.argv[1]
-tag = '<script src=\"ui/abyss-touch.js\" defer></script>'
+tags = [
+    '<script src=\"ui/abyss-spotlight-inject.js\" defer></script>',
+    '<script src=\"ui/abyss-touch.js\" defer></script>',
+]
 with open(path, encoding='utf-8') as f:
     html = f.read()
-if tag not in html:
-    if '</body>' in html:
-        html = html.replace('</body>', tag + chr(10) + '</body>', 1)
-    else:
-        html = html + chr(10) + tag + chr(10)
+changed = False
+for tag in tags:
+    if tag not in html:
+        if '</body>' in html:
+            html = html.replace('</body>', tag + chr(10) + '</body>', 1)
+        else:
+            html = html + chr(10) + tag + chr(10)
+        changed = True
+if changed:
     with open(path, 'w', encoding='utf-8') as f:
         f.write(html)
 " "$index"
-        ok "Linked touch script in index.html."
+    if grep -q 'abyss-spotlight-inject.js' "$index" && grep -q 'abyss-touch.js' "$index"; then
+        ok "Linked Abyss UI scripts in index.html."
+    elif grep -q 'abyss-spotlight-inject.js' "$index" || grep -q 'abyss-touch.js' "$index"; then
+        ok "Partially linked index.html (check script tags)."
+    else
+        warn "Could not link UI scripts in index.html; add manually before </body>."
     fi
     echo ""
 }
@@ -631,7 +652,7 @@ print(json.dumps(d))
     local ui_dir="${web_dir}/ui"
     ensure_writable_dir "$ui_dir"
 
-    for f in "spotlight.html" "spotlight.css"; do
+    for f in "spotlight.html" "spotlight.css" "abyss-spotlight-inject.js"; do
         local src="${abyss_dir}/${f}"
         local dest="${ui_dir}/${f}"
         [[ ! -f "$src" ]] && exit_error "Missing ${f} in ${abyss_dir} — sync_all_abyss_assets failed."
@@ -684,8 +705,8 @@ print(json.dumps(d))
     info "       cd /path/to/repo && ./setup.sh"
     info "       (web dir: /jellyfin/jellyfin-web or set JELLYFIN_WEB_DIR)"
     info "Theme served from: ${abyss_dir}/"
-    info "Custom CSS: @import url('/abyss/abyss.css')"
-    info "Verify in browser: ${server_url}/abyss/styles/abyss-player.css"
+    info "Custom CSS: @import url('/web/abyss/abyss.css')"
+    info "Verify in browser: ${server_url}/web/abyss/styles/abyss-player.css"
     echo ""
     echo -e "${yellow}  Important: Go to Settings > Display > Theme and set it to Dark${reset}"
     info "Abyss requires the Dark base theme to display correctly."
